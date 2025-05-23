@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unknown-property */
 import React, { forwardRef, useMemo, useRef, useLayoutEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import type { RootState } from "@react-three/fiber";

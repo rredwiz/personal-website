@@ -24,7 +24,29 @@ function App() {
                             </p>
                         </div>
                     </div>
-                    <div className="font-inter p-4 col-span-2 bg-black/25 h-50 rounded-xl shadow-md border border-gray-500/25"></div>
+                    <div className="p-4 col-span-2 bg-black/25 h-50 rounded-xl shadow-md border border-gray-500/25">
+                        <p className="text-xs text-white font-mono">
+                            <a href="https://github.com/rredwiz">
+                                andrew<span className="text-gray-400">/</span>
+                                README
+                                <span className="text-gray-400">.md</span>
+                            </a>
+                        </p>
+                        <div className="mt-2">
+                            <h3 className="text-white font-semibold text-2xl border-b-1 border-gray-600 inline">
+                                Slice of Me
+                            </h3>
+                        </div>
+                        <div className="mt-2">
+                            <p className="text-white text-md">
+                                I'm a currently-enrolled Computer Science
+                                student and dedicated programming hobbyist. At
+                                the moment, I'm occupying my time learning how
+                                to use a variety of full-stack development
+                                frameworks and tools to build cool things.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>
