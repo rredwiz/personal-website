@@ -53,9 +53,9 @@ function App() {
                             <p className="text-sm text-gray-400">
                                 CS Student & Developer
                             </p>
-                            <div className="flex mt-2 gap-1">
+                            <div className="flex mt-2 gap-1 justify-start items-center">
                                 <img src={location} className="w-4" />
-                                <p className="text-sm text-gray-400">
+                                <p className="text-xs text-gray-400">
                                     Nova Scotia, Canada
                                 </p>
                             </div>
