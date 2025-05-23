@@ -1,6 +1,9 @@
 import Background from "./components/background/Background";
 import ImageIcon from "./assets/images/ImageIcon.png";
 import location from "./assets/images/location-icon.svg";
+import linkedinIcon from "./assets/images/linkedin-icon.svg";
+import githubIcon from "./assets/images/github-icon.svg";
+import discordIcon from "./assets/images/discordLogo-icon.svg";
 
 function App() {
     return (
@@ -9,19 +12,53 @@ function App() {
                 <Background />
                 <div className="grid grid-cols-3 gap-4 w-3xl">
                     <div className="text-2xl text-white p-4 col-span-1 bg-black/25 h-50 rounded-xl shadow-md border border-gray-500/25">
-                        <img
-                            src={ImageIcon}
-                            className="mb-2 rounded-full w-20"
-                        />
-                        Hey, I'm <span className="font-semibold">Andrew</span>!
-                        <p className="text-sm text-gray-400">
-                            CS Student & Developer
-                        </p>
-                        <div className="flex mt-2 gap-1">
-                            <img src={location} className="w-4" />
+                        <div className="flex justify-around gap-2 items-center">
+                            <img
+                                src={ImageIcon}
+                                className="mb-2 rounded-full w-20"
+                            />
+                            <div className="flex justify-start items-center gap-4">
+                                <a
+                                    href="https://github.com/rredwiz"
+                                    target="_blank"
+                                >
+                                    <img
+                                        src={githubIcon}
+                                        className="w-6 hover:scale-110"
+                                    />
+                                </a>
+                                <a
+                                    href="https://www.linkedin.com/in/andrew-dutka-65368135a/"
+                                    target="_blank"
+                                >
+                                    <img
+                                        src={linkedinIcon}
+                                        className="w-6 hover:scale-110"
+                                    />
+                                </a>
+                                <a
+                                    href="https://discordapp.com/users/328153261834240000"
+                                    target="_blank"
+                                >
+                                    <img
+                                        src={discordIcon}
+                                        className="w-8 hover:scale-110 mr-1"
+                                    />
+                                </a>
+                            </div>
+                        </div>
+                        <div className="pointer-events-none">
+                            Hey, I'm{" "}
+                            <span className="font-semibold">Andrew</span>!
                             <p className="text-sm text-gray-400">
-                                Nova Scotia, Canada
+                                CS Student & Developer
                             </p>
+                            <div className="flex mt-2 gap-1">
+                                <img src={location} className="w-4" />
+                                <p className="text-sm text-gray-400">
+                                    Nova Scotia, Canada
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <div className="p-4 col-span-2 bg-black/25 h-50 rounded-xl shadow-md border border-gray-500/25">
