@@ -10,7 +10,7 @@ function App() {
         <>
             <div className="flex justify-center items-center w-full h-screen">
                 <Background />
-                <div className="grid grid-cols-3 gap-4 w-3xl">
+                <div className="flex flex-col md:grid md:grid-cols-3 gap-4 w-3xl">
                     <div className="text-2xl text-white p-4 col-span-1 bg-black/25 h-50 rounded-xl shadow-md border border-gray-500/25">
                         <div className="flex justify-around gap-2 items-center">
                             <img
@@ -49,7 +49,7 @@ function App() {
                         </div>
                         <div className="pointer-events-none">
                             Hey, I'm{" "}
-                            <span className="font-semibold">Andrew</span>!
+                            <span className="font-semibold">Andrew</span>.
                             <p className="text-sm text-gray-400">
                                 CS Student & Developer
                             </p>
@@ -63,7 +63,10 @@ function App() {
                     </div>
                     <div className="p-4 col-span-2 bg-black/25 h-50 rounded-xl shadow-md border border-gray-500/25">
                         <p className="text-xs text-white font-mono">
-                            <a href="https://github.com/rredwiz">
+                            <a
+                                href="https://github.com/rredwiz"
+                                target="_blank"
+                            >
                                 andrew<span className="text-gray-400">/</span>
                                 README
                                 <span className="text-gray-400">.md</span>
@@ -79,8 +82,8 @@ function App() {
                                 I'm a currently-enrolled Computer Science
                                 student and dedicated programming hobbyist. At
                                 the moment, I'm occupying my time learning how
-                                to use a variety of full-stack development
-                                frameworks and tools to build cool things.
+                                to use a variety of full-stack development tools
+                                and frameworks to build cool things.
                             </p>
                         </div>
                     </div>
