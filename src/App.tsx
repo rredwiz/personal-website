@@ -1,95 +1,96 @@
+import "./globals.css";
 import Background from "./components/background/Background";
 import ImageIcon from "./assets/images/ImageIcon.png";
-import location from "./assets/images/location-icon.svg";
+import locationIcon from "./assets/images/location-icon.svg";
 import linkedinIcon from "./assets/images/linkedin-icon.svg";
 import githubIcon from "./assets/images/github-icon.svg";
 import discordIcon from "./assets/images/discordLogo-icon.svg";
 
 function App() {
     return (
-        <>
-            <div className="flex justify-center items-center w-full h-screen">
-                <Background />
-                <div className="flex flex-col md:grid md:grid-cols-3 gap-4 w-3xl">
-                    <div className="text-2xl text-white p-4 col-span-1 bg-black/25 h-50 rounded-xl shadow-md border border-gray-500/25">
-                        <div className="flex justify-around gap-2 items-center">
-                            <img
-                                src={ImageIcon}
-                                className="mb-2 rounded-full w-20"
-                            />
-                            <div className="flex justify-start items-center gap-4">
-                                <a
-                                    href="https://github.com/rredwiz"
-                                    target="_blank"
-                                >
-                                    <img
-                                        src={githubIcon}
-                                        className="w-6 hover:scale-110"
-                                    />
-                                </a>
-                                <a
-                                    href="https://www.linkedin.com/in/andrew-dutka-65368135a/"
-                                    target="_blank"
-                                >
-                                    <img
-                                        src={linkedinIcon}
-                                        className="w-6 hover:scale-110"
-                                    />
-                                </a>
-                                <a
-                                    href="https://discordapp.com/users/328153261834240000"
-                                    target="_blank"
-                                >
-                                    <img
-                                        src={discordIcon}
-                                        className="w-8 hover:scale-110 mr-1"
-                                    />
-                                </a>
-                            </div>
-                        </div>
-                        <div className="pointer-events-none">
-                            Hey, I'm{" "}
-                            <span className="font-semibold">Andrew</span>.
-                            <p className="text-sm text-gray-400">
-                                CS Student & Developer
-                            </p>
-                            <div className="flex mt-2 gap-1 justify-start items-center">
-                                <img src={location} className="w-4" />
-                                <p className="text-xs text-gray-400">
-                                    Nova Scotia, Canada
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="p-4 col-span-2 bg-black/25 h-50 rounded-xl shadow-md border border-gray-500/25">
-                        <p className="text-xs text-white font-mono">
+        <div className="flex justify-center items-center w-full h-screen">
+            <Background />
+            <div className="flex m-8 flex-col md:grid md:grid-cols-3 gap-4 w-3xl">
+                <div className="flex gap-4 sm:gap-0 md:block p-4 col-span-1 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
+                    <div className="flex flex-col md:flex-row md:justify-around gap-2 items-center justify-center">
+                        <img
+                            src={ImageIcon}
+                            className="mb-2 rounded-full md:w-20"
+                        />
+                        <div className="flex justify-center md:justify-start items-center gap-4">
                             <a
                                 href="https://github.com/rredwiz"
                                 target="_blank"
                             >
-                                andrew<span className="text-gray-400">/</span>
-                                README
-                                <span className="text-gray-400">.md</span>
+                                <img
+                                    src={githubIcon}
+                                    className="w-6 hover:scale-110"
+                                />
                             </a>
-                        </p>
-                        <div className="mt-2">
-                            <h3 className="text-white font-semibold text-2xl border-b-1 border-gray-600 inline">
-                                Slice of Me
-                            </h3>
+                            <a
+                                href="https://www.linkedin.com/in/andrew-dutka-65368135a/"
+                                target="_blank"
+                            >
+                                <img
+                                    src={linkedinIcon}
+                                    className="w-6 hover:scale-110"
+                                />
+                            </a>
+                            <a
+                                href="https://discordapp.com/users/328153261834240000"
+                                target="_blank"
+                            >
+                                <img
+                                    src={discordIcon}
+                                    className="w-8 hover:scale-110 md:mr-1"
+                                />
+                            </a>
                         </div>
-                        <div className="mt-2">
-                            <p className="text-white text-md">
-                                I'm a currently-enrolled Computer Science
-                                student and dedicated programming hobbyist. At
-                                the moment, I'm occupying my time learning how
-                                to use a variety of full-stack development tools
-                                and frameworks to build cool things.
+                    </div>
+                    <div className="pointer-events-none md:block flex flex-col justify-center md:m-0 m-auto">
+                        <h1 className="text-white md:text-2xl sm:text-5xl text-4xl">
+                            Hey, I'm{" "}
+                            <span className="md:font-semibold font-bold">
+                                Andrew
+                            </span>
+                            .
+                        </h1>
+                        <p className="md:text-sm text-lg text-gray-400 md:mt-0 mt-2">
+                            CS Student & Developer
+                        </p>
+                        <div className="flex mt-2 gap-1 justify-start items-center">
+                            <img src={locationIcon} className="w-4" />
+                            <p className="md:text-xs text-sm text-gray-400">
+                                Nova Scotia, Canada
                             </p>
                         </div>
                     </div>
                 </div>
+                <div className="p-4 col-span-2 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
+                    <p className="text-xs text-white font-mono">
+                        <a href="https://github.com/rredwiz" target="_blank">
+                            andrew<span className="text-gray-400">/</span>
+                            README
+                            <span className="text-gray-400">.md</span>
+                        </a>
+                    </p>
+                    <div className="mt-2">
+                        <h3 className="text-white font-semibold text-2xl border-b-1 border-gray-600 inline">
+                            Slice of Me
+                        </h3>
+                    </div>
+                    <div className="mt-2">
+                        <p className="text-white text-md">
+                            I'm a currently-enrolled Computer Science student
+                            and dedicated programming hobbyist. At the moment,
+                            I'm occupying my time learning how to use a variety
+                            of full-stack development tools and frameworks to
+                            build cool things.
+                        </p>
+                    </div>
+                </div>
             </div>
-        </>
+        </div>
     );
 }
 
