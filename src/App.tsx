@@ -4,7 +4,7 @@ import ImageIcon from "./assets/images/ImageIcon.png";
 import locationIcon from "./assets/images/location-icon.svg";
 import linkedinIcon from "./assets/images/linkedin-icon.svg";
 import githubIcon from "./assets/images/github-icon.svg";
-import discordIcon from "./assets/images/discordLogo-icon.svg";
+import blueskyIcon from "./assets/images/blueskyLogo-icon.svg";
 
 function App() {
     return (
@@ -37,12 +37,12 @@ function App() {
                                 />
                             </a>
                             <a
-                                href="https://discordapp.com/users/328153261834240000"
+                                href="https://bsky.app/profile/rredwiz.bsky.social"
                                 target="_blank"
                             >
                                 <img
-                                    src={discordIcon}
-                                    className="w-8 hover:scale-110 md:mr-1"
+                                    src={blueskyIcon}
+                                    className="w-6 hover:scale-110 mr-1"
                                 />
                             </a>
                         </div>
