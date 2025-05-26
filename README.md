@@ -1,1 +1,1 @@
-The site is being hosted on my personal domain [here](https://andster.dev) using AWS.
+The site is being hosted on my personal domain [andster.dev](https://andster.dev) using Vercel.

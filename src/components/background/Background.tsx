@@ -8,9 +8,10 @@ export default function Background() {
     useEffect(() => {
         // waiting for browser to load before setting transition properties
         setTimeout(() => {
+            document.body.style.background = "";
             setTransition(true);
             setIsVisible(true);
-        }, 50);
+        }, 200);
     }, []);
     return (
         <div
