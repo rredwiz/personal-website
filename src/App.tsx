@@ -4,6 +4,10 @@ import locationIcon from "./assets/images/location-icon.svg";
 import linkedinIcon from "./assets/images/linkedin-icon.svg";
 import githubIcon from "./assets/images/github-icon.svg";
 import blueskyIcon from "./assets/images/blueskyLogo-icon.svg";
+import { inject } from "@vercel/analytics";
+
+// for vercel analytics
+inject();
 
 function App() {
     return (
