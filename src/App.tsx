@@ -40,7 +40,7 @@ function App() {
                                 />
                             </a>
                             <a
-                                href="https://bsky.app/profile/rredwiz.bsky.social"
+                                href="https://bsky.app/profile/andster.dev"
                                 target="_blank"
                             >
                                 <img
