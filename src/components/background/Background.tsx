@@ -9,7 +9,7 @@ export default function Background() {
     useEffect(() => {
         // waiting for browser to load before setting transition properties
         setTimeout(() => {
-            document.body.style.background = "";
+            document.body.classList.remove("bg-[#232323]");
             setTransition(true);
             setIsVisible(true);
         }, 200);
