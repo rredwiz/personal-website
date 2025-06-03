@@ -13,8 +13,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body>
+        <html lang="en" className="bg-[#232323]">
+            <body className="bg-[#232323]">
                 {children}
                 <Analytics />
             </body>
