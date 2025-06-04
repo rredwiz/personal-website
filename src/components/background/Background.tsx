@@ -1,8 +1,8 @@
 "use client";
 import Silk from "./Silk";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
-export default function Background() {
+export default function Background({ children }: { children?: ReactNode }) {
     const [isVisible, setIsVisible] = useState(false);
     const [transitionState, setTransition] = useState(false);
 
@@ -20,6 +20,8 @@ export default function Background() {
                 transitionState ? "transition-opacity" : "transition-none"
             } h-screen w-screen absolute inset-0 z-[-1] duration-2000 ease-in-out`}
         >
+            {/* TODO: */}
+            {children}
             <Silk
                 speed={5}
                 scale={0.6}

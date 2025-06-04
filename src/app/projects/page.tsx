@@ -1,7 +1,8 @@
+import React from "react";
 import Image from "next/image";
 import Nav from "@/components/navigation/Nav";
 
-export default function Home() {
+export default function ProjectsPage() {
     return (
         <main>
             <div className="flex justify-center items-center h-screen w-screen">
