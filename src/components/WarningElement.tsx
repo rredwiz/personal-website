@@ -16,7 +16,9 @@ export default function WarningElement({
                     width={20}
                     alt="info icon"
                 />
-                <p>This site is still a work in progress.</p>
+                <p className="text-xs md:text-md">
+                    This site is still a work in progress.
+                </p>
             </div>
         </div>
     );

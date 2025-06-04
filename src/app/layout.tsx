@@ -20,7 +20,7 @@ export default function RootLayout({
                 <Background />
                 {children}
                 <Analytics />
-                <WarningElement className="absolute bottom-5 left-[50%] translate-x-[-50%] cursor-default" />
+                <WarningElement className="absolute bottom-1 md:bottom-5 left-[50%] translate-x-[-50%] cursor-default" />
             </body>
         </html>
     );
