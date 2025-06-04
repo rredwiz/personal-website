@@ -8,7 +8,7 @@ export default function Nav({ className }: { className?: ReactNode }) {
         <nav className={`${className}`}>
             <div className="grid rounded-xl bg-black/25 border-gray-500/25 border-1 grid-cols-2">
                 <Link
-                    className="flex rounded-xl transition-colors duration-400 hover:bg-gray-500/20 p-2 justify-center items-center"
+                    className="flex rounded-xl transition-colors duration-400 hover:bg-gray-500/20 p-1.5 justify-center items-center"
                     href="/"
                 >
                     <Image
@@ -19,7 +19,7 @@ export default function Nav({ className }: { className?: ReactNode }) {
                     />
                 </Link>
                 <Link
-                    className="flex rounded-xl transition-colors duration-400 hover:bg-gray-500/20 p-2 justify-center items-center"
+                    className="flex rounded-xl transition-colors duration-400 hover:bg-gray-500/20 p-1.5 justify-center items-center"
                     href="/projects"
                 >
                     <Image
