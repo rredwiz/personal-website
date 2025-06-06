@@ -7,7 +7,7 @@ export default function Nav({
     page,
 }: {
     className?: ReactNode;
-    page: string;
+    page?: string;
 }) {
     return (
         <nav className={`${className}`}>

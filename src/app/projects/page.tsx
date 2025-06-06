@@ -6,14 +6,13 @@ import ProjectCard from "@/components/ProjectCard";
 export default function ProjectsPage() {
     return (
         <main>
-            <div className="flex justify-center items-center h-screen w-screen">
+            <div
+                key={"projectspage"}
+                className="flex justify-center items-center h-screen w-screen"
+            >
                 <div className="flex relative m-8 flex-col md:grid md:grid-cols-3 gap-4 w-3xl">
-                    <div className="flex relative p-4 col-span-3 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
+                    <div className="flex p-4 col-span-3 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
                         {/* some div here */}
-                        <Nav
-                            page="projects"
-                            className="absolute top-[-50] left-[50%] transition-opacity duration-1000 delay-1000 ease-in-out translate-x-[-50%]"
-                        />
                         <div className="flex justify-center items-center gap-4">
                             <div className="flex flex-col gap-2">
                                 <p className="text-xs text-white font-mono">
