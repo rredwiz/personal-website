@@ -1,24 +1,30 @@
 from flask import Flask, jsonify, request
-from config import Config
 import requests
 
+from dotenv import load_dotenv
+load_dotenv()
+from apis import spotify, github
+
 app = Flask(__name__)
-app.config.from_object(Config)
 
+# test route
 @app.route('/')
-def home():
-    return 'get response'
+def test():
+    data = spotify.test()
+    if not data:
+        return jsonify({"error":"bad thing occurred"}), 500
+    return jsonify(data), 200
 
-@app.route('/posts')
-def posts():
-    api_response = requests.get('https://jsonplaceholder.typicode.com/posts')
-    user_id = request.args.get('userId')
-    print(user_id)
-    if api_response.status_code == 200:
-        data = api_response.json()
-        return jsonify(data), 200
-    else:
-        return jsonify({"error" : "failed to fetch posts"}), 500
+@app.route('/github')
+def get_github_recent_commits():
+    return 'will make soon'
+
+@app.route('/spotify')
+def get_spotify_info():
+    data = spotify.main_request()
+    if not data:
+        return jsonify({"error": "the request was unsuccessful"}), 500
+    return jsonify(data), 200
 
 if __name__ == '__main__':
-    app.run(debug=app.config.get('DEBUG'))
+    app.run(debug=True)
