@@ -18,5 +18,22 @@ params = {
 def get_recent():
     response = requests.get(url, params=params)
     if response.status_code == 200:
-        return response.json()
-    print(f"response had status code {response.status_code}")
+        return create_lastfm_json(response.json())
+    print(f"something went wrong: status code was {response.status_code}")
+
+
+def create_lastfm_json(response_json):
+    track = response_json.get("recenttracks").get("track")[0]
+    currently_listening = response_json.get("recenttracks").get("track")[1] is not None
+    song_name = track.get("name")
+    artist = track.get("artist").get("#text")
+    image_url = track.get("image")[3].get("#text")
+
+    schema = {
+        "currentlylistening": f"{currently_listening}",
+        "songname": f"{song_name}",
+        "artist": f"{artist}",
+        "image": f"{image_url}",
+    }
+
+    return schema
