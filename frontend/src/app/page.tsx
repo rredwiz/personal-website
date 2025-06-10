@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Nav from "@/components/navigation/Nav";
+import RecentlyListenedCard from "@/components/RecentlyListenedCard";
 
 export default function Home() {
     return (
@@ -110,12 +111,9 @@ export default function Home() {
                         </div>
                     </div>
                     {/* */}
-                    <div className="p-4 col-span-2 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
-                        <h3 className="text-2xl">Recent Commits</h3>
-                        <p className="text-gray-400">Work in progress...</p>
-                    </div>
+                    <RecentlyListenedCard />
                     <div className="p-4 col-span-1 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
-                        <h3 className="text-2xl">Recently Listened</h3>
+                        <h3 className="text-2xl">Recent Commits</h3>
                         <p className="text-gray-400">Work in progress...</p>
                     </div>
                 </div>

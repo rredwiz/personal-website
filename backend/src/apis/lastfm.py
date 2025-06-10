@@ -1,6 +1,5 @@
 import os
 import requests
-from base64 import b64encode
 
 LASTFM_USERNAME = "redwheeze"
 LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY")
@@ -24,7 +23,7 @@ def get_recent():
 
 def create_lastfm_json(response_json):
     track = response_json.get("recenttracks").get("track")[0]
-    currently_listening = response_json.get("recenttracks").get("track")[1] is not None
+    currently_listening = len(response_json.get("recenttracks").get("track")) == 2
     song_name = track.get("name")
     artist = track.get("artist").get("#text")
     image_url = track.get("image")[3].get("#text")
