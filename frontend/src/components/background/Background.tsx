@@ -18,7 +18,7 @@ export default function Background({ children }: { children?: ReactNode }) {
         <div
             className={`${isVisible ? "opacity-100" : "opacity-0"} ${
                 transitionState ? "transition-opacity" : "transition-none"
-            } h-screen w-screen absolute inset-0 z-[-1] duration-2000 ease-in-out`}
+            } min-w-screen absolute inset-0 z-[-1] duration-2000 ease-in-out`}
         >
             {/* TODO: */}
             {children}

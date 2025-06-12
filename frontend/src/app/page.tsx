@@ -7,9 +7,9 @@ export default function Home() {
         <main>
             <div
                 key={"homepage"}
-                className="flex justify-center items-center h-screen w-screen"
+                className="flex justify-center items-center min-h-screen min-w-screen"
             >
-                <div className="flex m-8 flex-col md:grid md:grid-cols-3 gap-4 w-3xl">
+                <div className="flex m-8 mt-20 md:mt-0 flex-col md:grid md:grid-cols-3 gap-4 w-3xl">
                     <div className="flex gap-4 sm:gap-0 md:block p-4 col-span-1 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
                         <div className="flex flex-col md:flex-row md:justify-around gap-2 items-center justify-center">
                             <Image

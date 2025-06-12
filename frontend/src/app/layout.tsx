@@ -17,7 +17,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="bg-[#232323] overflow-hidden">
+        <html lang="en" className="bg-[#232323]">
             <body className="bg-[#232323] relative">
                 <Background />
                 <Nav className="absolute top-5 left-[50%] transition-opacity duration-1000 delay-1000 ease-in-out translate-x-[-50%]" />

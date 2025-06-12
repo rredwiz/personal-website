@@ -39,8 +39,9 @@ export default function RecentlyListenedCard() {
     if (!track) {
         return (
             <div className="p-4 col-span-2 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
-                <h3 className="text-2xl">Loading...</h3>
-                <p className="text-gray-400">Loading Listening History...</p>
+                <p className="text-gray-400 h-25">
+                    Loading Listening History...
+                </p>
             </div>
         );
     }
@@ -48,14 +49,15 @@ export default function RecentlyListenedCard() {
     return (
         <div className="p-4 col-span-2 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
             <div className="flex gap-4">
-                <Image
+                {/* <Image
                     className="mt-1 opacity-90 w-25 rounded-md"
                     src={track.image}
                     height={100}
                     width={100}
                     alt="current song album image"
-                />
-                <div className="flex w-[100%] justify-center flex-col">
+                /> */}
+                <img src={track.image} className="opacity-90 w-25 rounded-md" />
+                <div className="flex w-[100%] min-h-25 justify-center flex-col">
                     <h3 className="text-sm">
                         {track.currentlylistening === "True"
                             ? "Currently listening on Spotify"
