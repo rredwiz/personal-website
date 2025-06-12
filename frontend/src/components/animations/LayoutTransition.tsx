@@ -20,7 +20,7 @@ export default function Template({ children }: { children: ReactNode }) {
     const handleAnimationEnd = () => {
         setTimeout(() => {
             document.body.style.overflow = "auto";
-        }, 50);
+        }, 100);
     };
 
     return (
