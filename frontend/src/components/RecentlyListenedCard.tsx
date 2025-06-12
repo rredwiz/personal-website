@@ -16,7 +16,7 @@ export default function RecentlyListenedCard() {
         const fetchRecentlyListened = async () => {
             try {
                 const response = await fetch(
-                    "https://personal-website-backend-7zk8.onrender.com:10000/lastfm"
+                    "https://personal-website-backend-7zk8.onrender.com/lastfm"
                 );
                 if (!response.ok) {
                     throw new Error(

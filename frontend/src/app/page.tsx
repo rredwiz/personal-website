@@ -113,7 +113,7 @@ export default function Home() {
                     {/* */}
                     <RecentlyListenedCard />
                     <div className="p-4 col-span-1 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
-                        <h3 className="text-2xl">Recent Commits</h3>
+                        <h3 className="text-2xl">Working on it.</h3>
                         <p className="text-gray-400">Work in progress...</p>
                     </div>
                 </div>
