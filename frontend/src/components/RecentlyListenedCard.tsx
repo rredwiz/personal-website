@@ -15,7 +15,9 @@ export default function RecentlyListenedCard() {
     useEffect(() => {
         const fetchRecentlyListened = async () => {
             try {
-                const response = await fetch("http://localhost:5000/lastfm");
+                const response = await fetch(
+                    "https://personal-website-backend-7zk8.onrender.com:10000/lastfm"
+                );
                 if (!response.ok) {
                     throw new Error(
                         `HTTP Error ${response.status}: ${response.statusText}`

@@ -9,6 +9,11 @@ app = Flask(__name__)
 CORS(app)
 
 
+@app.route("/")
+def render_health_check():
+    return "HEALTH CHECK 200"
+
+
 @app.route("/github")
 def get_github_recent_commits():
     return "will make soon"
