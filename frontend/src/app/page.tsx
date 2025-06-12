@@ -1,8 +1,37 @@
 import Image from "next/image";
-import Nav from "@/components/navigation/Nav";
 import RecentlyListenedCard from "@/components/RecentlyListenedCard";
+import MonkeyTypeStatsCard from "@/components/MonkeyTypeStatsCard";
+import { TypingScore } from "@/types";
 
-export default function Home() {
+async function getMonkeytypeData(): Promise<TypingScore> {
+    try {
+        const response = await fetch(
+            "https://personal-website-backend-7zk8.onrender.com/monkeytype",
+            {
+                next: { revalidate: 3700 },
+            }
+        );
+        if (!response.ok)
+            throw new Error(
+                `HTTP Error: ${response.status}: ${response.statusText}`
+            );
+        const data: TypingScore = await response.json();
+        return {
+            averagewpm: data.averagewpm,
+            bestwpm: data.bestwpm,
+        };
+    } catch (e) {
+        console.error(`Error occurred during monkeytype fetch: ${e}`);
+        return {
+            averagewpm: 0,
+            bestwpm: 0,
+        };
+    }
+}
+
+export default async function Home() {
+    const monkeytype = getMonkeytypeData();
+
     return (
         <main>
             <div
@@ -112,10 +141,10 @@ export default function Home() {
                     </div>
                     {/* */}
                     <RecentlyListenedCard />
-                    <div className="p-4 col-span-1 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
-                        <h3 className="text-2xl">Working on it.</h3>
-                        <p className="text-gray-400">Work in progress...</p>
-                    </div>
+                    <MonkeyTypeStatsCard
+                        bestwpm={(await monkeytype).bestwpm}
+                        averagewpm={(await monkeytype).averagewpm}
+                    />
                 </div>
             </div>
         </main>
