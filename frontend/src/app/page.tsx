@@ -8,7 +8,7 @@ async function getMonkeytypeData(): Promise<TypingScore> {
         const response = await fetch(
             "https://personal-website-backend-7zk8.onrender.com/monkeytype",
             {
-                next: { revalidate: 3700 },
+                next: { revalidate: 100 },
             }
         );
         if (!response.ok)
@@ -55,7 +55,7 @@ export default async function Home() {
                                 >
                                     <Image
                                         src="/github-icon.svg"
-                                        className="w-6 hover:scale-110"
+                                        className="w-6"
                                         width={24}
                                         height={24}
                                         alt="github icon"
@@ -67,7 +67,7 @@ export default async function Home() {
                                 >
                                     <Image
                                         src="/linkedin-icon.svg"
-                                        className="w-6 hover:scale-110"
+                                        className="w-6"
                                         width={24}
                                         height={24}
                                         alt="linkedin icon"
@@ -79,7 +79,7 @@ export default async function Home() {
                                 >
                                     <Image
                                         src="/blueskyLogo-icon.svg"
-                                        className="w-6 hover:scale-110 mr-1"
+                                        className="w-6 mr-1"
                                         width={24}
                                         height={24}
                                         alt="blusky social media icon"
