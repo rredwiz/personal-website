@@ -54,6 +54,7 @@ def filter_avg_scores(data):
         print("count was 0 in filter_scores, therefore averagewpm is 0.0")
         return 0.0
     avg_wpm = wpm / count
+    avg_wpm = round(avg_wpm, 1)
     return avg_wpm
 
 

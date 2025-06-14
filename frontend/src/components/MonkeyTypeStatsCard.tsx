@@ -31,12 +31,12 @@ export default function MonkeyTypeStatsCard({
                 <div className="w-[1px] h-15 bg-gray-500"></div>
                 <div className="flex flex-col">
                     <h3 className="text-lg font-semibold">
-                        {/* {averagewpm.toFixed(1)} */}
+                        {averagewpm}
                         <span className="text-md font-medium"> wpm</span>
                         <span className="text-sm"> avg</span>
                     </h3>
                     <h4 className="text-gray-400 font-semibold">
-                        {/* {bestwpm.toFixed(1)} */}
+                        {bestwpm}
                         <span className="text-sm font-medium"> wpm</span>
                         <span className="text-xs"> best</span>
                     </h4>
@@ -55,11 +55,8 @@ export default function MonkeyTypeStatsCard({
                     <motion.div
                         className="absolute inset-0 flex items-center justify-center text-sm font-medium text-white"
                     >
-                        {displayPercentage.toFixed(1)}%
+                        {displayPercentage.toFixed(1)}% to 150wpm
                     </motion.div>
-                </div>
-                <div className="absolute -bottom-[15px] right-0 text-xs text-gray-400">
-                    150 wpm avg goal
                 </div>
             </div>
         </div>

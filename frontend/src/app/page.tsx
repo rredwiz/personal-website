@@ -8,7 +8,7 @@ async function getMonkeytypeData(): Promise<TypingScore> {
         const response = await fetch(
             "https://personal-website-backend-7zk8.onrender.com/monkeytype",
             {
-                next: { revalidate: 100 },
+                next: { revalidate: 3600 },
             }
         );
         if (!response.ok)
@@ -35,7 +35,6 @@ export default async function Home() {
     return (
         <main>
             <div
-                key={"homepage"}
                 className="flex justify-center items-center min-h-screen min-w-screen"
             >
                 <div className="flex m-8 mt-20 md:mt-0 flex-col md:grid md:grid-cols-3 gap-4 w-3xl">

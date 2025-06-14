@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import Nav from "@/components/navigation/Nav";
 import ProjectCard from "@/components/ProjectCard";
 
 export default function ProjectsPage() {
@@ -12,7 +11,6 @@ export default function ProjectsPage() {
             >
                 <div className="flex relative m-8 mt-20 md:mt-0 flex-col md:grid md:grid-cols-3 gap-4 w-3xl">
                     <div className="flex p-4 col-span-3 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
-                        {/* some div here */}
                         <div className="flex justify-center items-center gap-4">
                             <div className="flex flex-col gap-2">
                                 <p className="text-xs text-white font-mono">
