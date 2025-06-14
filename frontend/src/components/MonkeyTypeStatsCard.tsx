@@ -31,12 +31,12 @@ export default function MonkeyTypeStatsCard({
                 <div className="w-[1px] h-15 bg-gray-500"></div>
                 <div className="flex flex-col">
                     <h3 className="text-lg font-semibold">
-                        {averagewpm.toFixed(1)}
+                        {/* {averagewpm.toFixed(1)} */}
                         <span className="text-md font-medium"> wpm</span>
                         <span className="text-sm"> avg</span>
                     </h3>
                     <h4 className="text-gray-400 font-semibold">
-                        {bestwpm.toFixed(1)}
+                        {/* {bestwpm.toFixed(1)} */}
                         <span className="text-sm font-medium"> wpm</span>
                         <span className="text-xs"> best</span>
                     </h4>
