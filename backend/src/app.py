@@ -26,7 +26,10 @@ def get_typing_stats():
 
 @app.route("/github")
 def get_github_recent_commits():
-    return "will make soon"
+    data = github.get_github_events()
+    if not data:
+        return jsonify({"error": "flask received None from github.get_github_events"}), 500
+    return jsonify(data), 200
 
 
 @app.route("/lastfm")

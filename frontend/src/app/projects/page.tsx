@@ -6,7 +6,6 @@ export default function ProjectsPage() {
     return (
         <main>
             <div
-                key={"projectspage"}
                 className="flex justify-center items-center min-h-screen min-w-screen"
             >
                 <div className="flex relative m-8 mt-20 md:mt-0 flex-col md:grid md:grid-cols-3 gap-4 w-3xl">
