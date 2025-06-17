@@ -17,5 +17,11 @@ def get_github_events():
 
 
 def create_github_json(response_json):
-    # creating logic
-    return response_json
+    github_json = []
+    limit = 5
+    for event in response_json:
+        if event['type'] == 'PushEvent' and len(github_json) < limit:
+            github_json.append(event['payload']['commits'][0]['message'])
+        else:
+            break
+    return github_json
