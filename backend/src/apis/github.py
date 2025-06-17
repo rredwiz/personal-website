@@ -17,11 +17,20 @@ def get_github_events():
 
 
 def create_github_json(response_json):
-    github_json = []
+    github_json = {
+        "events": []
+    }
     limit = 5
     for event in response_json:
-        if event['type'] == 'PushEvent' and len(github_json) < limit:
-            github_json.append(event['payload']['commits'][0]['message'])
+        if event['type'] == 'PushEvent' and len(github_json['events']) < limit:
+            github_json['events'].append({
+                "message": event['payload']['commits'][0]['message'],
+                "repo_name": event['repo']['name'],
+                "repo_url": event['repo']['url'],
+                "commit_url": event['payload']['commits'][0]['url'],
+                "type": event['type'],
+                "created_at": event['created_at'],
+            })
         else:
             break
     return github_json
