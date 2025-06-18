@@ -30,7 +30,7 @@ async function getMonkeytypeData(): Promise<TypingScore> {
 }
 
 export default async function Home() {
-    const monkeytype = getMonkeytypeData();
+    const monkeytype = await getMonkeytypeData();
 
     return (
         <main>
@@ -141,8 +141,11 @@ export default async function Home() {
                     {/* */}
                     <RecentlyListenedCard />
                     <MonkeyTypeStatsCard
-                        bestwpm={(await monkeytype).bestwpm}
-                        averagewpm={(await monkeytype).averagewpm}
+                        // TODO: remove after done testing
+                        // bestwpm={monkeytype.bestwpm}
+                        // averagewpm={monkeytype.averagewpm}
+                        bestwpm={100}
+                        averagewpm={100}
                     />
                 </div>
             </div>
