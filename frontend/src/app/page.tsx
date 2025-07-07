@@ -41,8 +41,8 @@ export default async function Home() {
                     <div className="flex gap-4 sm:gap-0 md:block p-4 col-span-1 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
                         <div className="flex flex-col md:flex-row md:justify-around gap-2 items-center justify-center">
                             <Image
-                                src="/ImageIcon.png"
-                                className="mb-2 rounded-full md:w-20"
+                                src="/pixierou.png"
+                                className="mb-2 md:w-20"
                                 width={153}
                                 height={153}
                                 alt="minecraft character image"

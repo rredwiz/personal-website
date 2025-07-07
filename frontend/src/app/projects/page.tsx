@@ -1,32 +1,32 @@
 import React from "react";
 import Image from "next/image";
 import ProjectCard from "@/components/ProjectCard";
-import GithubEvents from "@/components/GithubEvents";
-import { GithubCommitEvents } from "@/types";
+// import GithubEvents from "@/components/GithubEvents";
+// import { GithubCommitEvents } from "@/types";
 
-async function getGithubEvents(): Promise<GithubCommitEvents> {
-    try {
-        const response = await fetch(
-            // "https://personal-website-backend-7zk8.onrender.com/github"
-            "http://localhost:5000/github"
-        );
-        if (!response.ok) {
-            throw new Error(
-                `HTTP Error ${response.status}: ${response.statusText}`
-            );
-        }
-        const data: GithubCommitEvents = await response.json();
-        return data;
-    } catch (e) {
-        console.error(`Error occured during a fetch:`, e);
-        return {
-            events: [],
-        };
-    }
-}
+// async function getGithubEvents(): Promise<GithubCommitEvents> {
+//     try {
+//         const response = await fetch(
+//             // "https://personal-website-backend-7zk8.onrender.com/github"
+//             "http://localhost:5000/github"
+//         );
+//         if (!response.ok) {
+//             throw new Error(
+//                 `HTTP Error ${response.status}: ${response.statusText}`
+//             );
+//         }
+//         const data: GithubCommitEvents = await response.json();
+//         return data;
+//     } catch (e) {
+//         console.error(`Error occured during a fetch:`, e);
+//         return {
+//             events: [],
+//         };
+//     }
+// }
 
 export default async function ProjectsPage() {
-    const githubEvents = await getGithubEvents();
+    // const githubEvents = await getGithubEvents();
 
     return (
         <main>
@@ -51,8 +51,8 @@ export default async function ProjectsPage() {
                                     </a>
                                 </p>
                                 <Image
-                                    src="/ImageIcon.png"
-                                    className="h-auto w-auto mb-2 rounded-full md:w-20"
+                                    src="/pixierou.png"
+                                    className="h-auto w-auto mb-2 md:w-20"
                                     width={153}
                                     height={153}
                                     alt="minecraft character image"
@@ -85,19 +85,9 @@ export default async function ProjectsPage() {
                         imageAlt="timer app example image"
                         desc="..."
                     />
-                    <ProjectCard
-                        header="Desktop Timer App"
-                        imageSrc="/timer-app-example2.png"
-                        imageAlt="timer app example image"
-                        desc="..."
-                    />
-                    <ProjectCard
-                        header="Desktop Timer App"
-                        imageSrc="/timer-app-example2.png"
-                        imageAlt="timer app example image"
-                        desc="..."
-                    /> */}
-                    <GithubEvents events={githubEvents.events} />
+                    */}
+                    {/* TODO: add github events somewhere in the future */}
+                    {/* <GithubEvents events={githubEvents.events} /> */}
                     <ProjectCard />
                     <ProjectCard />
                     <ProjectCard />
