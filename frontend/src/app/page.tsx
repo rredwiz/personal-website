@@ -138,14 +138,10 @@ export default async function Home() {
                             </p>
                         </div>
                     </div>
-                    {/* */}
                     <RecentlyListenedCard />
                     <MonkeyTypeStatsCard
-                        // TODO: remove after done testing
-                        // bestwpm={monkeytype.bestwpm}
-                        // averagewpm={monkeytype.averagewpm}
-                        bestwpm={100}
-                        averagewpm={100}
+                        bestwpm={monkeytype.bestwpm}
+                        averagewpm={monkeytype.averagewpm}
                     />
                 </div>
             </div>
