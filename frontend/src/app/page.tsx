@@ -34,9 +34,7 @@ export default async function Home() {
 
     return (
         <main>
-            <div
-                className="flex justify-center items-center min-h-screen min-w-screen"
-            >
+            <div className="flex justify-center items-center min-h-screen min-w-screen">
                 <div className="flex m-8 mt-20 md:mt-0 flex-col md:grid md:grid-cols-3 gap-4 w-3xl">
                     <div className="flex gap-4 sm:gap-0 md:block p-4 col-span-1 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
                         <div className="flex flex-col md:flex-row md:justify-around gap-2 items-center justify-center">
@@ -124,17 +122,17 @@ export default async function Home() {
                         </p>
                         <div className="mt-2">
                             <h3 className="text-white font-semibold text-2xl border-b-1 border-gray-600 inline">
-                                Slice of Me
+                                About Me
                             </h3>
                         </div>
                         <div className="mt-2">
                             <p className="text-white text-md">
-                                I'm a currently-enrolled rising sophomore
-                                Computer Science student and dedicated
-                                programming hobbyist. At the moment, I'm
-                                occupying my time learning how to use a variety
-                                of full-stack development tools and frameworks
-                                to build cool things.
+                                I'm a currently-enrolled sophomore Computer
+                                Science student and dedicated programming
+                                hobbyist. At the moment, I'm occupying my time
+                                learning how to use a variety of full-stack
+                                development tools and frameworks to build cool
+                                things.
                             </p>
                         </div>
                     </div>
