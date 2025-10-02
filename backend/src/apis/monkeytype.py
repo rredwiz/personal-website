@@ -1,5 +1,6 @@
 import os
 import requests
+import time
 
 APE_KEY = os.environ.get("APE_KEY")
 
@@ -9,11 +10,24 @@ header = {"Authorization": f"ApeKey {APE_KEY}"}
 avg_wpm_params = {"limit": "100"}
 best_wpm_params = {"mode": "time"}
 
+# cached json to save rate limiting requests
+cached_json = None
+time_since_last_cached = 0
 
 def get_monkeytype_scores_info():
+    global cached_json
+    global time_since_last_cached
+
+    time_since_last_cached = time.time() - time_since_last_cached
+    if cached_json is not None and time_since_last_cached < 3600:
+        return cached_json
+
     avg_wpm = get_recent_100_scores_avg()
     best_wpm = get_best_score()
-    return {"averagewpm": avg_wpm, "bestwpm": best_wpm}
+    cached_json = {"averagewpm": avg_wpm, "bestwpm": best_wpm}
+
+    time_since_last_cached = time.time()
+    return cached_json
 
 
 def get_best_score():
