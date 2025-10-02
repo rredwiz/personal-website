@@ -12,13 +12,13 @@ best_wpm_params = {"mode": "time"}
 
 # cached json to save rate limiting requests
 cached_json = None
-time_since_last_cached = 0
+last_cached = 0
 
 def get_monkeytype_scores_info():
     global cached_json
-    global time_since_last_cached
+    global last_cached
 
-    time_since_last_cached = time.time() - time_since_last_cached
+    time_since_last_cached = time.time() - last_cached
     if cached_json is not None and time_since_last_cached < 3600:
         return cached_json
 
@@ -26,7 +26,7 @@ def get_monkeytype_scores_info():
     best_wpm = get_best_score()
     cached_json = {"averagewpm": avg_wpm, "bestwpm": best_wpm}
 
-    time_since_last_cached = time.time()
+    last_cached = time.time()
     return cached_json
 
 
