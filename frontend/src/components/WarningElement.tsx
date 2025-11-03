@@ -17,7 +17,7 @@ export default function WarningElement({
                     alt="info icon"
                 />
                 <p className="text-xs md:text-md">
-                    This site is still a work in progress.
+                    This site owner is extremely cool.
                 </p>
             </div>
         </div>
