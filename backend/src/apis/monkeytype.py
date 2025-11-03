@@ -20,8 +20,10 @@ def get_monkeytype_scores_info():
 
     time_since_last_cached = time.time() - last_cached
     if cached_json is not None and time_since_last_cached < 3600:
+        print("returning cached json")
         return cached_json
 
+    print("getting new uncached scores")
     avg_wpm = get_recent_100_scores_avg()
     best_wpm = get_best_score()
     cached_json = {"averagewpm": avg_wpm, "bestwpm": best_wpm}

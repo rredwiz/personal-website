@@ -30,9 +30,7 @@ export default async function ProjectsPage() {
 
     return (
         <main>
-            <div
-                className="flex justify-center items-center min-h-screen min-w-screen"
-            >
+            <div className="flex justify-center items-center min-h-screen min-w-screen">
                 <div className="flex relative m-8 mt-20 md:mt-0 flex-col md:grid md:grid-cols-3 gap-4 w-3xl">
                     <div className="flex p-4 col-span-3 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
                         <div className="flex justify-center items-center gap-4">
@@ -88,9 +86,22 @@ export default async function ProjectsPage() {
                     */}
                     {/* TODO: add github events somewhere in the future */}
                     {/* <GithubEvents events={githubEvents.events} /> */}
-                    <ProjectCard />
-                    <ProjectCard />
-                    <ProjectCard />
+                    <ProjectCard
+                        // this header needs to fit, so it needs to be shorter
+                        header="MC Instance Bot"
+                        desc="Enabled a Discord bot to create and manage Minecraft instances."
+                        url="https://github.com/rredwiz/alt_manager"
+                    />
+                    <ProjectCard
+                        url="https://github.com/qZheng/syllabus-decoder"
+                        header="Syllabuddy AI"
+                        desc="Implemented a syllabus decoder to parse important details."
+                    />
+                    <ProjectCard
+                        url="https://github.com/rredwiz/timer-app"
+                        header="Desktop Timer App"
+                        desc="An Electron desktop timer app made for myself and friends."
+                    />
                 </div>
             </div>
         </main>
