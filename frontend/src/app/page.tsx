@@ -71,15 +71,15 @@ export default async function Home() {
                                     />
                                 </a>
                                 <a
-                                    href="https://bsky.app/profile/andster.dev"
+                                    href="/Andrew-Dutka-Resume.pdf"
                                     target="_blank"
                                 >
                                     <Image
-                                        src="/blueskyLogo-icon.svg"
+                                        src="/document.svg"
                                         className="w-6 hover:scale-110 transition-all duration-300 mr-1"
                                         width={24}
                                         height={24}
-                                        alt="blusky social media icon"
+                                        alt="resume icon"
                                     />
                                 </a>
                             </div>
