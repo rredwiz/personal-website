@@ -21,13 +21,9 @@ export default function RootLayout({
             <body className="bg-[#232323] relative min-h-screen overflow-x-hidden">
                 <Background />
                 <Nav className="absolute top-5 left-[50%] z-10 transition-opacity duration-1000 delay-1000 ease-in-out translate-x-[-50%]" />
-                <div className="flex min-h-screen flex-col">
-                    <div className="flex-1">
-                        <LayoutTransition>{children}</LayoutTransition>
-                    </div>
-                    <WarningElement className="flex justify-center px-4 pb-4 md:pb-5 cursor-default" />
-                </div>
+                <LayoutTransition>{children}</LayoutTransition>
                 <Analytics />
+                <WarningElement className="absolute bottom-4 md:bottom-5 left-[50%] translate-x-[-50%] cursor-default" />
             </body>
         </html>
     );
