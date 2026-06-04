@@ -1,5 +1,6 @@
 import Image from "next/image";
 import RecentlyListenedCard from "@/components/RecentlyListenedCard";
+// import SpotifyCard from "@/components/SpotifyCard";
 import MonkeyTypeStatsCard from "@/components/MonkeyTypeStatsCard";
 import { TypingScore } from "@/types";
 
@@ -34,7 +35,7 @@ export default async function Home() {
 
     return (
         <main>
-            <div className="flex justify-center items-center min-h-screen min-w-screen">
+            <div className="flex justify-center items-center min-h-[calc(100svh-3.75rem)] min-w-screen">
                 <div className="flex m-8 mt-20 md:mt-0 flex-col md:grid md:grid-cols-3 gap-4 w-3xl">
                     <div className="flex gap-4 sm:gap-0 md:block p-4 col-span-1 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
                         <div className="flex flex-col md:flex-row md:justify-around gap-2 items-center justify-center">
@@ -127,16 +128,23 @@ export default async function Home() {
                         </div>
                         <div className="mt-2">
                             <p className="text-white text-md">
-                                I'm a currently-enrolled sophomore Computer
-                                Science student and dedicated programming
-                                hobbyist. At the moment, I'm occupying my time
-                                learning how to use a variety of full-stack
-                                development tools and frameworks to build cool
-                                things.
+                                I'm a currently-enrolled rising junior Computer
+                                Science student and software developer. At the
+                                moment, I'm interning at{" "}
+                                <a
+                                    href="https://www.purolator.com/en/digitallab"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-gray-300 border-b border-gray-300/70 transition-colors duration-200 ease-in-out hover:text-white hover:border-white"
+                                >
+                                    Purolator Digital Lab
+                                </a>{" "}
+                                and hobby building full-stack projects in my free time.
                             </p>
                         </div>
                     </div>
                     <RecentlyListenedCard />
+                    {/* <SpotifyCard /> */}
                     <MonkeyTypeStatsCard
                         bestwpm={monkeytype.bestwpm}
                         averagewpm={monkeytype.averagewpm}

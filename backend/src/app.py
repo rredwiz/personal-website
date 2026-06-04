@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 from src.apis import lastfm, github, monkeytype
+# from src.apis import spotify
 
 app = Flask(__name__)
 CORS(app)
@@ -41,6 +42,18 @@ def get_lastfm_scrobble():
             500,
         )
     return jsonify(data), 200
+
+# Spotify is intentionally kept in the tree but disabled so production behavior
+# does not change until the integration is ready.
+# @app.route("/spotify")
+# def get_spotify_data():
+#     data = spotify.get_spotify_iframe()
+#     if not data:
+#         return (
+#             jsonify({"error": "flask received None from spotify.get_recent"}),
+#             500,
+#         )
+#     return jsonify(data), 200
 
 
 if __name__ == "__main__":
