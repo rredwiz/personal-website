@@ -1,40 +1,39 @@
 # Handoff: audit + fix pass (branch `fix/audit`)
 
-_Written 2026-10-09 by the agent that did the audit. Read this before continuing._
+_Written 2026-10-09 by the agent that did the audit; updated the same day by the session that ran the checks on Andrew's Mac. Read this before continuing._
 
 ## Status at a glance
 
 | Area | State |
 | --- | --- |
-| Branch | `fix/audit`, 3 commits on top of `master` (`94678a5`). Lives at `~/.stuff/projects/personal-website` on Andrew's Mac. **Not pushed** — the session had no push access to GitHub. |
-| Backend (`backend/`) | **Verified.** 56 tests pass (`python -m unittest discover -s tests -t .` and `pytest`); server smoke-tested (`/` → 200, `/monkeytype` without keys → 502 JSON + CORS headers). |
-| Frontend (`frontend/`) | **Written but NOT executed.** The sandbox could not reach the npm registry, so `npm install`, `eslint`, `tsc`, `vitest` and `next build` never ran. Treat the frontend as "needs a green run" — expect small lint/type nits, not design problems. |
-| Design pass | **Not started.** Brief at the bottom. Do it on a new branch from `fix/audit` once the frontend checks are green. |
+| Branch | `fix/audit`, 7 commits on top of `master` (`94678a5`). **Not pushed**, and Andrew asked that nothing go to `master` yet. |
+| Backend (`backend/`) | **Verified.** `ruff check .`, `ruff format --check .` and 56 pytest tests pass (Python 3.14 locally; CI uses 3.13). The second session fixed one `ruff` failure (missing newline in `src/apis/__init__.py`) that would have failed CI. |
+| Frontend (`frontend/`) | **Verified.** Clean `npm ci` (npm 10.9.8, as in CI) → `lint` (0 problems, 37 files, React Compiler rules active) → `typecheck` (also with no `.next/`, as in CI) → `test` (61 tests) → `build` all pass on Next 16.4.0. |
+| Visual parity | **Verified in a browser** against a `master` build: home and projects at 1024×768 and 390×844 match element-for-element (bounding boxes, font sizes, colours). Only differences: the intended nav underline (makes the nav pill 1 px taller), the `/projects` tab title, and the fixed body-overflow bug (`master` leaves inline `overflow: auto` on `<body>` after one navigation). No console errors. |
+| Design pass | Branch `design/visual-refresh` from `fix/audit` (see the brief at the bottom). |
 
-## First things to do
+## What the second session changed
+
+- **Lockfile regenerated** (CI's `npm ci` would have failed on the stale one). Every runtime dependency stays at the version `master` ships except Next.js.
+- **next 16.1.1 → 16.4.0** (and `eslint-config-next` to match): `npm audit` reported critical advisories for `next <=16.3.7` (RSC DoS, cache poisoning, middleware bypass, image-optimizer SSRF/RCE) plus the bundled `sharp`/`postcss`.
+- **vitest 3.2 → 4.1.11, @vitejs/plugin-react 4 → 5.2**: vitest 3 pulls in `tinypool <2.1.2` (critical) and `@vitest/mocker <4.1.11`. No test changes were needed. `vitest.config.ts` → `.mts` (Vite 8 warns about ESM in a CJS-loaded config); `tsconfig.json` includes `**/*.mts`.
+- `npm audit fix` for transitive `tar`, `fflate`, `postcss`, `sharp`. **Remaining:** `braces <=3.0.3` via `eslint-config-next → fast-glob` (lint-time only; npm's only "fix" is downgrading to eslint-config-next 14). **ESLint stays on 9**: `eslint-plugin-react` (bundled by eslint-config-next) doesn't support ESLint 10 yet.
+- **Prettier run** in its own commit (house style = `master`'s: 4-space, 80 columns). JSON stays 2-space; `tsconfig.json`/`next-env.d.ts` are left to Next.js.
+- **npm gotcha:** npm 10.9.8 crashes (`Cannot read properties of null (reading 'edgesOut')` in Arborist `#loadPeerSet`) when *adding or upgrading* vitest 4 in this tree. If that happens, run the install with `npx npm@11 install ...`; the resulting lockfile (v3) works with npm 10's `npm ci`, which was verified.
+
+## How to run the checks
 
 ```bash
-cd ~/.stuff/projects/personal-website
-git status                       # should say: On branch fix/audit, clean
-git push -u origin fix/audit     # optional, whenever you want it on GitHub
+cd ~/.stuff/projects/personal-website/frontend
+npm ci && npm run lint && npm run typecheck && npm test && npm run build
 
-# frontend: regenerate the lockfile (package.json gained devDependencies), then the checks
-cd frontend
-npm install                      # updates package-lock.json — commit it; CI uses `npm ci`
-npm run lint
-npm run typecheck
-npm test
-npm run build
-
-# backend
 cd ../backend
-python -m venv .venv && source .venv/bin/activate
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
-ruff check .
-pytest
+ruff check . && pytest
 ```
 
-Fix whatever the frontend checks report, commit, then push. The stray `~/.stuff/projects/personal-website-fix-audit.tar.gz` next to the repo is the transfer archive and can be deleted.
+`~/.stuff/projects/_to_delete/` (the transfer archive and a stale git lock file) can be deleted.
 
 ## Ground rule that was followed
 
@@ -88,16 +87,18 @@ New files: `src/lib/{config,api,webgl,theme}.ts`, `src/hooks/usePolling.ts`, 11 
 - Spotify stays unrouted (backend) and un-rendered (frontend); `GithubEvents` + `getGithubEvents()` are ready but not rendered on `/projects`.
 - Copy ("rising junior", "interning at Purolator Digital Lab") is content, not code — Andrew's call.
 
-## Things that could not be verified (watch for these on the first green run)
+## First-run watch list (all resolved 2026-10-09)
 
-1. `eslint.config.mjs` uses the Next 16 template imports (`eslint-config-next/core-web-vitals`, `eslint-config-next/typescript`, `defineConfig`/`globalIgnores` from `eslint/config`). If the installed `eslint-config-next` exports differently, adjust.
-2. eslint-config-next 16 may enable the React Compiler lint rules (`react-hooks/set-state-in-effect`, `react-hooks/refs`, …). The code was written with them in mind (no synchronous `setState` in effect bodies; `FrozenRoute` uses `useState` instead of reading a ref during render), but it hasn't been linted.
-3. `Silk.tsx` casts the forwarded ref to `React.RefObject<Mesh | null>` (React 19 types); if tsc objects, `MutableRefObject` was the original.
-4. Vitest: `motion/react` is mocked in `MonkeyTypeStatsCard.test.tsx` and `Background.test.tsx`; `LayoutTransition.test.tsx` runs the real `AnimatePresence` in jsdom with `FrozenRoute` mocked. If jsdom needs more polyfills (e.g. `ResizeObserver`), add them to `vitest.setup.tsx`.
-5. `package-lock.json` is stale (new devDependencies). `npm install` regenerates it; **commit it**, or CI's `npm ci` fails.
-6. Dependency ranges were chosen without registry access: `vitest ^3.2`, `@vitejs/plugin-react ^4.5`, `jsdom ^26.1`, `@testing-library/react ^16.3`, `@testing-library/jest-dom ^6.6`, `@testing-library/dom ^10.4`, `eslint ^9`, `eslint-config-next ^16.1.1`, `prettier ^3.5`. Bump freely if `npm install` complains.
-7. Prettier (`tabWidth: 4`, default print width) hasn't been run over the touched files; `npm run format` will reflow some long lines — do it in its own commit.
-8. Deploy notes: Render needs no config change (`Procfile` unchanged, `requirements.txt` just lost `flask-cors`); optionally set `CORS_ORIGINS=https://andster.dev,https://www.andster.dev`. Vercel: nothing to change; `NEXT_PUBLIC_BACKEND_URL` is optional.
+The first session couldn't run the frontend; this was its list of things to watch. Outcomes:
+
+1. `eslint.config.mjs` imports: **worked as written** with eslint-config-next 16.4.0.
+2. React Compiler lint rules (`react-hooks/set-state-in-effect`, `refs`, `purity`, …): **active, and the code passes them** (0 problems).
+3. `Silk.tsx` ref cast: **tsc accepts it.**
+4. Vitest/jsdom: **no extra polyfills needed**; 61 tests pass (the "50 test cases" count above undercounted).
+5. Stale `package-lock.json`: **regenerated and committed.**
+6. Dependency ranges: **resolved fine; bumped for security** (see "What the second session changed").
+7. Prettier: **run, own commit.**
+8. Deploy notes still apply: Render needs no config change (`Procfile` unchanged, `requirements.txt` just lost `flask-cors`); optionally set `CORS_ORIGINS=https://andster.dev,https://www.andster.dev`. Vercel: nothing to change; `NEXT_PUBLIC_BACKEND_URL` is optional. The new frontend accepts both the old and the new backend response shapes, so the two can deploy in either order.
 
 ## Design-pass brief (pass 2 — "go all out", separate branch)
 
