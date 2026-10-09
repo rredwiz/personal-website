@@ -7,11 +7,12 @@ const usePathname = vi.hoisted(() => vi.fn<() => string | null>());
 vi.mock("next/navigation", () => ({ usePathname }));
 
 describe("isActivePath", () => {
-    it("matches home exactly and sections by prefix", () => {
+    it("matches routes exactly (404s under a section don't light its tab)", () => {
         expect(isActivePath("/", "/")).toBe(true);
         expect(isActivePath("/projects", "/")).toBe(false);
         expect(isActivePath("/projects", "/projects")).toBe(true);
-        expect(isActivePath("/projects/foo", "/projects")).toBe(true);
+        expect(isActivePath("/projects/", "/projects")).toBe(true);
+        expect(isActivePath("/projects/foo", "/projects")).toBe(false);
         expect(isActivePath("/projectsx", "/projects")).toBe(false);
         expect(isActivePath(null, "/")).toBe(false);
     });

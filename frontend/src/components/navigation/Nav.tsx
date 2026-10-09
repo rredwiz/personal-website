@@ -5,10 +5,14 @@ import { motion, useReducedMotion } from "motion/react";
 import { TABS } from "@/components/vim/commands";
 import { cx } from "@/lib/cx";
 
+/**
+ * Exact matches only: the site has no nested routes, and a 404 under
+ * /projects/... must not light up the projects tab (the prerendered 404 page
+ * couldn't know, so the hydrated markup would differ).
+ */
 export function isActivePath(pathname: string | null, href: string): boolean {
     if (!pathname) return false;
-    if (href === "/") return pathname === "/";
-    return pathname === href || pathname.startsWith(`${href}/`);
+    return pathname === href || (href !== "/" && pathname === `${href}/`);
 }
 
 /** Vim's tabline as a floating pill: one tab per page, numbered like `1gt`. */
