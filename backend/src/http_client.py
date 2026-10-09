@@ -43,9 +43,7 @@ def fetch_json(
         return None
 
     if not 200 <= response.status_code < 300:
-        logger.warning(
-            "request to %s returned HTTP %s: %.200s", url, response.status_code, response.text
-        )
+        logger.warning("request to %s returned HTTP %s: %.200s", url, response.status_code, response.text)
         return None
 
     try:
