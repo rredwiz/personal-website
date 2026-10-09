@@ -1,0 +1,113 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { ImageResponse } from "next/og";
+
+// Social preview card, rendered once at build time.
+export const alt = "Andrew Dutka, CS student & developer";
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
+
+const HEADLINE = "Hey, I'm Andrew.";
+const ROLE = "CS Student & Developer";
+const FOOTER = "andster.dev · Nova Scotia, Canada";
+
+/**
+ * Fetch just the glyphs we need from Google Fonts as TTF (what the image
+ * renderer understands). Returns null on any failure so an offline build still
+ * produces an image, just in the default font.
+ */
+async function loadGoogleFont(
+    family: string,
+    weight: number,
+    text: string,
+): Promise<ArrayBuffer | null> {
+    try {
+        const cssUrl = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(
+            family,
+        )}:wght@${weight}&text=${encodeURIComponent(text)}`;
+        const css = await (await fetch(cssUrl)).text();
+        const fontUrl = css.match(
+            /src: url\((.+?)\) format\('(?:opentype|truetype)'\)/,
+        )?.[1];
+        if (!fontUrl) return null;
+        const response = await fetch(fontUrl);
+        return response.ok ? await response.arrayBuffer() : null;
+    } catch {
+        return null;
+    }
+}
+
+export default async function OpengraphImage() {
+    const [avatar, display, body] = await Promise.all([
+        readFile(join(process.cwd(), "public/pixierou.png")),
+        loadGoogleFont("Bricolage Grotesque", 700, HEADLINE),
+        loadGoogleFont("Geist", 400, ROLE + FOOTER),
+    ]);
+    const avatarSrc = `data:image/png;base64,${avatar.toString("base64")}`;
+    // Fonts are subset to their own text, so use both or neither: a lone
+    // subset would otherwise get picked for the glyphs it happens to contain.
+    const fonts =
+        display && body
+            ? [
+                  { name: "Bricolage", data: display, weight: 700 as const },
+                  { name: "Geist", data: body, weight: 400 as const },
+              ]
+            : undefined;
+
+    return new ImageResponse(
+        <div
+            style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                gap: 64,
+                padding: "0 96px",
+                backgroundColor: "#0f0f11",
+                backgroundImage:
+                    "radial-gradient(circle at 50% -10%, rgba(244,162,97,0.16), transparent 55%), radial-gradient(circle at 15% 110%, rgba(255,255,255,0.06), transparent 50%)",
+                color: "#ededf0",
+            }}
+        >
+            {/* 256 px is the sprite's native size, so no smoothing. */}
+            <img src={avatarSrc} width={256} height={256} alt="" />
+            <div style={{ display: "flex", flexDirection: "column" }}>
+                <div
+                    style={{
+                        display: "flex",
+                        fontSize: 92,
+                        fontWeight: 700,
+                        letterSpacing: "-0.02em",
+                        fontFamily: fonts ? "Bricolage" : undefined,
+                    }}
+                >
+                    Hey, I&apos;m&nbsp;
+                    <span style={{ color: "#f4a261" }}>Andrew</span>.
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        marginTop: 14,
+                        fontSize: 42,
+                        color: "#a6a6b0",
+                        fontFamily: fonts ? "Geist" : undefined,
+                    }}
+                >
+                    {ROLE}
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        marginTop: 44,
+                        fontSize: 28,
+                        color: "#85858f",
+                        fontFamily: fonts ? "Geist" : undefined,
+                    }}
+                >
+                    {FOOTER}
+                </div>
+            </div>
+        </div>,
+        { ...size, fonts },
+    );
+}
