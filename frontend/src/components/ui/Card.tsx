@@ -1,23 +1,23 @@
 import type { HTMLAttributes, ReactNode } from "react";
 import { cx } from "@/lib/cx";
 
-// `group/card` lets a card's file bar light up like Vim's active window.
+// `group/card` lets a card's file name light up like Vim's active window.
 const CARD_CLASS =
-    "group/card relative rounded-xl border border-line bg-surface p-5 shadow-card";
+    "group/card relative rounded-2xl border border-line bg-surface p-5 shadow-card";
 
 type CardProps = HTMLAttributes<HTMLElement> & {
     as?: "div" | "section" | "article";
 };
 
-/** The glass panel every block on the site sits in. */
+/** The glass panel every block on the site sits in (a "buffer": `dd` can delete it). */
 export function Card({ as: Tag = "div", className, ...rest }: CardProps) {
-    return <Tag className={cx(CARD_CLASS, className)} {...rest} />;
+    return <Tag data-card="" className={cx(CARD_CLASS, className)} {...rest} />;
 }
 
 /**
- * A window bar ("andrew/README.md ... markdown") flush with the top of a Card;
- * it brightens while the card is hovered, like Vim's active window. Pass the
- * label's segments as children and the filetype as `meta`.
+ * The buffer's file name ("andrew/README.md ... markdown") at the top of a
+ * Card; it brightens while the card is hovered, like Vim's active window.
+ * Pass the label's segments as children and the filetype as `meta`.
  */
 export function CardFileBar({
     icon,
@@ -33,7 +33,7 @@ export function CardFileBar({
     return (
         <div
             className={cx(
-                "-mx-5 -mt-5 mb-4 flex items-center gap-2 rounded-t-xl border-b border-line bg-white/[0.02] px-5 py-2 font-mono text-xs text-ink-faint transition-colors duration-200 group-hover/card:bg-white/[0.04] group-hover/card:text-ink-muted",
+                "mb-4 flex items-center gap-2 font-mono text-xs text-ink-faint transition-colors duration-200 group-hover/card:text-ink-muted",
                 className,
             )}
         >

@@ -3,9 +3,8 @@ import { cx } from "@/lib/cx";
 
 /**
  * Text laid out like a Vim buffer with `:set number wrap`: a line-number
- * gutter, long lines that wrap under a single number, and `~` filler for the
- * rows below the last line when the window is taller than its text. Pass
- * `null` for an empty line.
+ * gutter, and long lines that wrap under a single number. Pass `null` for an
+ * empty line.
  */
 export function Buffer({
     lines,
@@ -22,11 +21,11 @@ export function Buffer({
                         <span
                             aria-hidden="true"
                             className={cx(
-                                "text-right text-sm tabular-nums select-none",
+                                "text-right font-mono text-xs tabular-nums select-none",
                                 // The "cursor line" number is highlighted, like CursorLineNr.
                                 index === 0
                                     ? "text-ink-muted"
-                                    : "text-ink-faint/45",
+                                    : "text-ink-faint/40",
                             )}
                         >
                             {index + 1}
@@ -36,18 +35,6 @@ export function Buffer({
                         </div>
                     </Fragment>
                 ))}
-            </div>
-            {/*
-             * The filler is absolutely positioned so it adds no height of its
-             * own: it only shows in space the card already has (e.g. when a
-             * taller neighbour stretches the row), never makes a card taller.
-             */}
-            <div aria-hidden="true" className="relative min-h-0 flex-1">
-                <div className="absolute inset-0 overflow-hidden text-sm leading-[1.6] text-ink-faint/35 select-none">
-                    {Array.from({ length: 24 }, (_, index) => (
-                        <div key={index}>~</div>
-                    ))}
-                </div>
             </div>
         </div>
     );
@@ -59,7 +46,7 @@ export function Cursor({ className }: { className?: string }) {
         <span
             aria-hidden="true"
             className={cx(
-                "ml-[0.08em] inline-block h-[0.95em] w-[0.55em] translate-y-[0.14em] bg-ink motion-safe:animate-blink",
+                "ml-[0.1em] inline-block h-[0.9em] w-[0.45em] translate-y-[0.12em] rounded-[2px] bg-ink motion-safe:animate-blink",
                 className,
             )}
         />

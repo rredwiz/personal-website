@@ -62,7 +62,7 @@ export default function ProjectsPage() {
                             lines={[
                                 <h1
                                     key="heading"
-                                    className="font-display text-xl leading-snug font-bold tracking-tight sm:text-2xl"
+                                    className="font-display text-xl leading-snug font-semibold tracking-tight sm:text-[1.65rem]"
                                 >
                                     <span
                                         aria-hidden="true"

@@ -3,6 +3,3 @@
  * animated background. Keep in sync with --color-canvas in globals.css.
  */
 export const BASE_COLOR = "#0a0c0f";
-
-/** Base colour the silk shader shades; its folds range from ~20% to 100% of it. */
-export const SILK_COLOR = "#272a2f";

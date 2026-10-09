@@ -62,7 +62,7 @@ export default function ProjectCard({
                 <ExternalLink
                     href={url}
                     aria-label={`Open ${title} in a new tab`}
-                    className="after:absolute after:inset-0 after:rounded-xl focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-accent"
+                    className="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-accent"
                 >
                     {title}
                 </ExternalLink>

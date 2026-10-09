@@ -1,5 +1,5 @@
 import type { ComponentType, SVGProps } from "react";
-import Avatar from "@/components/Avatar";
+import AvatarButton from "@/components/vim/AvatarButton";
 import RecentlyListenedCard from "@/components/RecentlyListenedCard";
 import MonkeyTypeStatsCard from "@/components/MonkeyTypeStatsCard";
 import { Card, CardFileBar } from "@/components/ui/Card";
@@ -37,7 +37,7 @@ function ProfileCard() {
     return (
         <Card className="flex flex-col gap-5">
             <div className="flex items-start justify-between gap-3">
-                <Avatar scale={5} preload className="-mt-1 -ml-1" />
+                <AvatarButton />
                 <ul className="flex gap-1.5">
                     {SOCIAL_LINKS.map(({ href, label, Icon }) => (
                         <li key={href}>
@@ -54,7 +54,7 @@ function ProfileCard() {
                 </ul>
             </div>
             <div>
-                <h1 className="font-display text-2xl leading-[1.2] font-bold tracking-tight">
+                <h1 className="font-display text-[1.75rem] leading-[1.15] font-semibold tracking-tight">
                     <span className="text-ink-soft">Hey, I&apos;m</span>{" "}
                     {/* nowrap keeps the cursor on the name's line */}
                     <span className="whitespace-nowrap">
@@ -99,7 +99,7 @@ function AboutCard({ className }: { className?: string }) {
                     <h2
                         key="heading"
                         id="about-heading"
-                        className="font-display text-xl font-bold tracking-tight"
+                        className="font-display text-xl font-semibold tracking-tight"
                     >
                         <span aria-hidden="true" className="text-ink-faint">
                             #{" "}
@@ -107,10 +107,7 @@ function AboutCard({ className }: { className?: string }) {
                         About Me
                     </h2>,
                     null,
-                    <p
-                        key="body"
-                        className="text-[0.95rem] leading-relaxed text-ink-soft"
-                    >
+                    <p key="body" className="leading-relaxed text-ink-soft">
                         I&apos;m a currently-enrolled rising junior Computer
                         Science student and software developer. At the moment,
                         I&apos;m interning at{" "}

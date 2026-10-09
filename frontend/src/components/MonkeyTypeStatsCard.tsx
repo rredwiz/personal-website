@@ -6,6 +6,13 @@ import { cx } from "@/lib/cx";
 import { Card } from "@/components/ui/Card";
 import ExternalLink from "@/components/ui/ExternalLink";
 import MonkeyTypeLogo from "./MonkeyTypeLogo";
+import { unlockEgg } from "@/components/vim/eggs";
+import { KONAMI_EVENT } from "@/components/vim/events";
+import { pushToast } from "@/components/vim/toast";
+
+/** What the Konami code does to the number, briefly. */
+const CHEAT_WPM = 999.99;
+const CHEAT_MS = 6000;
 
 /** The progress bar measures the best score against this goal. */
 export const WPM_GOAL = 200;
@@ -23,7 +30,9 @@ export default function MonkeyTypeStatsCard({
     className?: string;
 }) {
     const reducedMotion = useReducedMotion();
-    const target = goalPercentage(stats?.bestwpm ?? 0);
+    const [cheating, setCheating] = useState(false);
+    const shown = cheating ? CHEAT_WPM : stats?.bestwpm;
+    const target = goalPercentage(shown ?? 0);
     // Always 0 on the first render: the server can't know the visitor's
     // motion preference, so rendering anything else here would make the
     // hydrated markup differ from the server's. The count-up runs after
@@ -38,6 +47,31 @@ export default function MonkeyTypeStatsCard({
         });
         return () => controls.stop();
     }, [target, reducedMotion]);
+
+    // Konami code: a few seconds of fame.
+    useEffect(() => {
+        let timer: number | undefined;
+        const onKonami = () => {
+            setCheating(true);
+            window.clearTimeout(timer);
+            timer = window.setTimeout(() => setCheating(false), CHEAT_MS);
+        };
+        window.addEventListener(KONAMI_EVENT, onKonami);
+        return () => {
+            window.removeEventListener(KONAMI_EVENT, onKonami);
+            window.clearTimeout(timer);
+        };
+    }, []);
+
+    const explainSpeed = () => {
+        if (!stats) return;
+        const perSecond = (stats.bestwpm * 5) / 60;
+        pushToast({
+            title: `${stats.bestwpm} wpm`,
+            text: `That's about ${perSecond.toFixed(1)} characters a second, for 15 seconds straight.`,
+        });
+        unlockEgg("speed");
+    };
 
     return (
         <Card className={cx("flex flex-col", className)}>
@@ -55,9 +89,20 @@ export default function MonkeyTypeStatsCard({
                 </span>
             </div>
             <p className="mt-4 flex items-baseline gap-2">
-                <span className="font-mono text-4xl font-semibold tracking-tight text-ink tabular-nums">
-                    {stats ? stats.bestwpm : "—"}
-                </span>
+                {stats ? (
+                    <button
+                        type="button"
+                        onClick={explainSpeed}
+                        title="What does that mean?"
+                        className="rounded-md font-mono text-4xl font-semibold tracking-tight text-ink tabular-nums transition-colors hover:text-white"
+                    >
+                        {shown}
+                    </button>
+                ) : (
+                    <span className="font-mono text-4xl font-semibold tracking-tight text-ink tabular-nums">
+                        —
+                    </span>
+                )}
                 <span className="text-sm text-ink-muted">wpm best</span>
             </p>
             <div className="mt-auto pt-5">

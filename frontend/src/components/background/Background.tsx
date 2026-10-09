@@ -3,7 +3,7 @@ import { Component, ReactNode, useEffect, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import Silk from "./Silk";
 import { supportsWebGL } from "@/lib/webgl";
-import { SILK_COLOR } from "@/lib/theme";
+import { COLORSCHEMES, colorscheme } from "@/components/vim/colorschemes";
 import { cx } from "@/lib/cx";
 
 /** Delay before fading the shader in, so the first paint is the flat base colour. */
@@ -44,6 +44,7 @@ export default function Background() {
     const [isVisible, setIsVisible] = useState(false);
     const [canRenderSilk, setCanRenderSilk] = useState(false);
     const reducedMotion = useReducedMotion();
+    const scheme = colorscheme.useValue();
 
     useEffect(() => {
         // Mount the shader after the first paint, then fade it in.
@@ -68,7 +69,7 @@ export default function Background() {
                         speed={reducedMotion ? 0 : 4}
                         frameloop={reducedMotion ? "demand" : "always"}
                         scale={0.6}
-                        color={SILK_COLOR}
+                        color={COLORSCHEMES[scheme].silk}
                         noiseIntensity={0.12}
                         rotation={2.18}
                     />

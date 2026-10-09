@@ -1,4 +1,8 @@
 import type { HTMLAttributes } from "react";
+import { act, fireEvent } from "@testing-library/react";
+import { KONAMI_EVENT } from "@/components/vim/events";
+import { foundEggs, resetEggs } from "@/components/vim/eggs";
+import { toasts } from "@/components/vim/toast";
 import { renderToString } from "react-dom/server";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
@@ -109,5 +113,28 @@ describe("MonkeyTypeStatsCard", () => {
         const reduced = renderToString(<MonkeyTypeStatsCard stats={stats} />);
         motionPrefs.reduced = false;
         expect(reduced).toBe(normal);
+    });
+
+    it("explains the number when clicked (an Easter egg)", () => {
+        resetEggs();
+        toasts.set([]);
+        render(
+            <MonkeyTypeStatsCard stats={{ averagewpm: 100, bestwpm: 120 }} />,
+        );
+        fireEvent.click(screen.getByRole("button", { name: "120" }));
+        expect(toasts.get().at(0)?.text).toBe(
+            "That's about 10.0 characters a second, for 15 seconds straight.",
+        );
+        expect(foundEggs.get()).toContain("speed");
+    });
+
+    it("cheats for a moment when the Konami code is entered", () => {
+        render(
+            <MonkeyTypeStatsCard stats={{ averagewpm: 100, bestwpm: 120 }} />,
+        );
+        act(() => {
+            window.dispatchEvent(new Event(KONAMI_EVENT));
+        });
+        expect(screen.getByText("999.99")).toBeInTheDocument();
     });
 });

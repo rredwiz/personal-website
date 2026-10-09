@@ -1,25 +1,26 @@
 @import "tailwindcss";
 
 /*
- * The font comes from next/font (see layout.tsx), which defines the
- * --font-jetbrains variable on <html>.
+ * Fonts come from next/font (see layout.tsx), which defines --font-figtree
+ * and --font-jetbrains on <html>. Figtree carries the content; JetBrains Mono
+ * carries everything Vim (file names, line numbers, the statusline, numbers).
  * `inline` makes the utilities reference those variables directly.
  */
 @theme inline {
-    /* All three roles share JetBrains Mono; kept separate so they can diverge. */
     --font-sans:
-        var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
-    --font-mono:
-        var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+        var(--font-figtree), ui-sans-serif, system-ui, -apple-system, sans-serif;
     --font-display:
+        var(--font-figtree), ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-mono:
         var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 @theme {
     /*
-     * Monochrome: every colour is one cool slate hue (oklch h=255) at very
-     * low chroma, varying only in lightness. Text tiers all pass WCAG AA on
-     * the cards (ink-faint is the lowest, ~5:1).
+     * The default colorscheme. Monochrome: every colour is one cool slate hue
+     * (oklch h=255) at very low chroma, varying only in lightness. Text tiers
+     * all pass WCAG AA on the cards (ink-faint is the lowest, ~5:1). The
+     * `:colorscheme` Easter egg swaps these via html[data-theme] below.
      */
 
     /* Page and card surfaces. Keep --color-canvas in sync with BASE_COLOR in lib/theme.ts. */
@@ -40,8 +41,15 @@
     --shadow-card:
         inset 0 1px 0 0 rgb(255 255 255 / 0.04), 0 1px 2px rgb(0 0 0 / 0.35),
         0 16px 40px -20px rgb(0 0 0 / 0.75);
+    --shadow-float:
+        inset 0 1px 0 0 rgb(255 255 255 / 0.05), 0 2px 6px rgb(0 0 0 / 0.3),
+        0 24px 60px -24px rgb(0 0 0 / 0.8);
 
     --animate-equalize: equalize 0.9s ease-in-out infinite;
+    --animate-blink: blink 1.1s steps(1, end) infinite;
+    --animate-pop-in: pop-in 0.22s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    --animate-boing: boing 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+    --animate-chug: chug 7s linear both;
 
     @keyframes equalize {
         0%,
@@ -52,8 +60,6 @@
             transform: scaleY(1);
         }
     }
-
-    --animate-blink: blink 1.1s steps(1, end) infinite;
 
     @keyframes blink {
         0%,
@@ -76,12 +82,147 @@
             transform: none;
         }
     }
+
+    @keyframes pop-in {
+        from {
+            opacity: 0;
+            transform: translateY(6px) scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes boing {
+        0% {
+            transform: translateY(0) scale(1, 1);
+        }
+        30% {
+            transform: translateY(-14px) scale(0.95, 1.06);
+        }
+        60% {
+            transform: translateY(0) scale(1.06, 0.94);
+        }
+        100% {
+            transform: translateY(0) scale(1, 1);
+        }
+    }
+
+    @keyframes chug {
+        from {
+            transform: translateX(100vw);
+        }
+        to {
+            transform: translateX(-100%);
+        }
+    }
+}
+
+/*
+ * `:colorscheme <name>` (an Easter egg). Palettes follow each scheme's own
+ * colours; every text tier was contrast-checked to WCAG AA on the cards.
+ * The silk colours live in components/vim/colorschemes.ts.
+ */
+@layer base {
+    html[data-theme="gruvbox"] {
+        --color-canvas: #1d2021;
+        --color-surface: rgb(40 40 40 / 0.82);
+        --color-line: rgb(235 219 178 / 0.1);
+        --color-line-strong: rgb(235 219 178 / 0.22);
+        --color-ink: #ebdbb2;
+        --color-ink-soft: #d5c4a1;
+        --color-ink-muted: #bdae93;
+        --color-ink-faint: #a89984;
+        --color-accent: #fabd2f;
+    }
+    html[data-theme="nord"] {
+        --color-canvas: #242933;
+        --color-surface: rgb(46 52 64 / 0.82);
+        --color-line: rgb(216 222 233 / 0.1);
+        --color-line-strong: rgb(216 222 233 / 0.22);
+        --color-ink: #eceff4;
+        --color-ink-soft: #e5e9f0;
+        --color-ink-muted: #d8dee9;
+        --color-ink-faint: #9aa5b8;
+        --color-accent: #88c0d0;
+    }
+    html[data-theme="catppuccin"] {
+        --color-canvas: #11111b;
+        --color-surface: rgb(30 30 46 / 0.82);
+        --color-line: rgb(205 214 244 / 0.09);
+        --color-line-strong: rgb(205 214 244 / 0.2);
+        --color-ink: #cdd6f4;
+        --color-ink-soft: #bac2de;
+        --color-ink-muted: #a6adc8;
+        --color-ink-faint: #9399b2;
+        --color-accent: #cba6f7;
+    }
+    html[data-theme="tokyonight"] {
+        --color-canvas: #16161e;
+        --color-surface: rgb(26 27 38 / 0.82);
+        --color-line: rgb(192 202 245 / 0.09);
+        --color-line-strong: rgb(192 202 245 / 0.2);
+        --color-ink: #c0caf5;
+        --color-ink-soft: #a9b1d6;
+        --color-ink-muted: #9aa5ce;
+        --color-ink-faint: #8089b3;
+        --color-accent: #7aa2f7;
+    }
+    html[data-theme="rosepine"] {
+        --color-canvas: #191724;
+        --color-surface: rgb(31 29 46 / 0.82);
+        --color-line: rgb(224 222 244 / 0.09);
+        --color-line-strong: rgb(224 222 244 / 0.2);
+        --color-ink: #e0def4;
+        --color-ink-soft: #cecbe6;
+        --color-ink-muted: #908caa;
+        --color-ink-faint: #8c87a6;
+        --color-accent: #ebbcba;
+    }
+    html[data-theme="dracula"] {
+        --color-canvas: #1e1f29;
+        --color-surface: rgb(40 42 54 / 0.82);
+        --color-line: rgb(248 248 242 / 0.09);
+        --color-line-strong: rgb(248 248 242 / 0.2);
+        --color-ink: #f8f8f2;
+        --color-ink-soft: #e2e2dc;
+        --color-ink-muted: #b8bcd0;
+        --color-ink-faint: #9aa2c8;
+        --color-accent: #bd93f9;
+    }
+    html[data-theme="solarized"] {
+        --color-canvas: #00202a;
+        --color-surface: rgb(7 54 66 / 0.8);
+        --color-line: rgb(238 232 213 / 0.1);
+        --color-line-strong: rgb(238 232 213 / 0.22);
+        --color-ink: #eee8d5;
+        --color-ink-soft: #c9c5b3;
+        --color-ink-muted: #93a1a1;
+        --color-ink-faint: #8c9b9b;
+        --color-accent: #2aa198;
+    }
+    html[data-theme="everforest"] {
+        --color-canvas: #232a2e;
+        --color-surface: rgb(45 53 59 / 0.82);
+        --color-line: rgb(211 198 170 / 0.1);
+        --color-line-strong: rgb(211 198 170 / 0.22);
+        --color-ink: #d3c6aa;
+        --color-ink-soft: #c5baa0;
+        --color-ink-muted: #a7b09b;
+        --color-ink-faint: #9da9a0;
+        --color-accent: #a7c080;
+    }
 }
 
 @layer base {
     html {
         color-scheme: dark;
         -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        transition: background-color 0.4s ease;
     }
 
     ::selection {
@@ -102,6 +243,30 @@
         outline-style: solid;
         outline-offset: 3px;
     }
+}
+
+/* `/` search: painted with the CSS Custom Highlight API, so the DOM is never touched. */
+::highlight(vim-search) {
+    background-color: color-mix(in oklab, var(--color-accent) 30%, transparent);
+    color: var(--color-ink);
+}
+::highlight(vim-search-current) {
+    background-color: var(--color-accent);
+    color: var(--color-canvas);
+}
+
+/* `dd` on a card (an Easter egg): it folds away; `u` brings it back. */
+[data-card] {
+    transition:
+        opacity 0.28s ease,
+        transform 0.28s ease,
+        filter 0.28s ease;
+}
+[data-card][data-deleted] {
+    opacity: 0;
+    transform: scale(0.96);
+    filter: blur(2px);
+    pointer-events: none;
 }
 
 /* Cards rise in one after another; skipped entirely for reduced motion. */
