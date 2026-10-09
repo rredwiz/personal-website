@@ -1,7 +1,6 @@
 import type { ComponentType, SVGProps } from "react";
 import Avatar from "@/components/Avatar";
 import RecentlyListenedCard from "@/components/RecentlyListenedCard";
-// import SpotifyCard from "@/components/SpotifyCard";
 import MonkeyTypeStatsCard from "@/components/MonkeyTypeStatsCard";
 import { Card, CardFileBar } from "@/components/ui/Card";
 import ExternalLink from "@/components/ui/ExternalLink";
@@ -126,7 +125,6 @@ export default async function Home() {
                 <ProfileCard />
                 <AboutCard className="md:col-span-2" />
                 <RecentlyListenedCard className="md:col-span-2" />
-                {/* <SpotifyCard /> */}
                 <MonkeyTypeStatsCard stats={monkeytype} />
             </div>
         </main>

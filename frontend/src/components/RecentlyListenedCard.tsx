@@ -1,7 +1,8 @@
 "use client";
 import { useCallback, useState } from "react";
 import { usePolling } from "@/hooks/usePolling";
-import { fetchRecentTrack, isNowPlaying } from "@/lib/api";
+import { fetchRecentTrack, isNowPlaying, songLink } from "@/lib/api";
+import { timeAgo } from "@/lib/time";
 import { cx } from "@/lib/cx";
 import type { RecentTrack } from "@/types";
 import { Card, CardLabel } from "@/components/ui/Card";
@@ -99,6 +100,8 @@ export default function RecentlyListenedCard({
     }
 
     const nowPlaying = isNowPlaying(track);
+    const playedAgo =
+        !nowPlaying && track.playedAt ? timeAgo(track.playedAt) : null;
 
     return (
         <Card className={cx(CARD_CLASS, className)}>
@@ -137,18 +140,19 @@ export default function RecentlyListenedCard({
                     {nowPlaying
                         ? "Now playing on Spotify"
                         : "Last played on Spotify"}
+                    {playedAgo && (
+                        <span className="text-ink-faint/80">· {playedAgo}</span>
+                    )}
                 </CardLabel>
                 <p className="mt-2 line-clamp-2 font-display text-xl leading-tight font-semibold tracking-tight md:text-2xl">
-                    {track.url ? (
-                        <ExternalLink
-                            href={track.url}
-                            className="transition-colors duration-200 hover:text-accent"
-                        >
-                            {track.songname}
-                        </ExternalLink>
-                    ) : (
-                        track.songname
-                    )}
+                    {/* Straight to the track when Spotify supplied it, else a Spotify search. */}
+                    <ExternalLink
+                        href={songLink(track)}
+                        title={`Open ${track.songname} on Spotify`}
+                        className="transition-colors duration-200 hover:text-accent"
+                    >
+                        {track.songname}
+                    </ExternalLink>
                 </p>
                 <p className="mt-1 truncate text-ink-muted">{track.artist}</p>
             </div>

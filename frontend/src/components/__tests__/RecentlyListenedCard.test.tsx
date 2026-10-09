@@ -69,27 +69,47 @@ describe("RecentlyListenedCard", () => {
         expect(screen.getByText("Now playing on Spotify")).toBeInTheDocument();
     });
 
-    it("links the song to Last.fm when the backend sends a URL", async () => {
+    it("links the song straight to the track when Spotify supplied it", async () => {
         fetchRecentTrack.mockResolvedValue({
             ...TRACK,
-            url: "https://www.last.fm/music/Daft+Punk/_/Harder,+Better,+Faster,+Stronger",
+            source: "spotify",
+            url: "https://open.spotify.com/track/5W3cjX2J3tjhG8zb6u0qHn",
         });
         render(<RecentlyListenedCard />);
         await act(async () => {});
         const link = screen.getByRole("link", { name: TRACK.songname });
         expect(link).toHaveAttribute(
             "href",
-            "https://www.last.fm/music/Daft+Punk/_/Harder,+Better,+Faster,+Stronger",
+            "https://open.spotify.com/track/5W3cjX2J3tjhG8zb6u0qHn",
         );
         expect(link).toHaveAttribute("rel", "noopener noreferrer");
     });
 
-    it("shows the song as plain text without a URL", async () => {
-        fetchRecentTrack.mockResolvedValue(TRACK);
+    it("links Last.fm data to a Spotify search for the song", async () => {
+        fetchRecentTrack.mockResolvedValue({
+            ...TRACK,
+            source: "lastfm",
+            url: "https://www.last.fm/music/Daft+Punk",
+        });
         render(<RecentlyListenedCard />);
         await act(async () => {});
-        expect(screen.getByText(TRACK.songname)).toBeInTheDocument();
-        expect(screen.queryByRole("link")).not.toBeInTheDocument();
+        expect(
+            screen.getByRole("link", { name: TRACK.songname }),
+        ).toHaveAttribute(
+            "href",
+            "https://open.spotify.com/search/Harder%2C%20Better%2C%20Faster%2C%20Stronger%20Daft%20Punk",
+        );
+    });
+
+    it("says how long ago a past track was played", async () => {
+        vi.setSystemTime(new Date("2026-10-09T12:00:00Z"));
+        fetchRecentTrack.mockResolvedValue({
+            ...TRACK,
+            playedAt: "2026-07-24T02:06:00Z",
+        });
+        render(<RecentlyListenedCard />);
+        await act(async () => {});
+        expect(screen.getByText("· 2 months ago")).toBeInTheDocument();
     });
 
     it("renders a placeholder instead of a broken image when there is no album art", async () => {
