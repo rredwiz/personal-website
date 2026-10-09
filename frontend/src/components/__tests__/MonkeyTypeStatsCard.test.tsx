@@ -1,9 +1,12 @@
 import type { HTMLAttributes } from "react";
+import { renderToString } from "react-dom/server";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import MonkeyTypeStatsCard, {
     goalPercentage,
 } from "@/components/MonkeyTypeStatsCard";
+
+const motionPrefs = vi.hoisted(() => ({ reduced: false }));
 
 type MotionDivProps = HTMLAttributes<HTMLDivElement> & {
     initial?: unknown;
@@ -36,7 +39,7 @@ vi.mock("motion/react", async () => {
             options.onUpdate?.(to);
             return { stop: () => {} };
         },
-        useReducedMotion: () => false,
+        useReducedMotion: () => motionPrefs.reduced,
     };
 });
 
@@ -91,5 +94,17 @@ describe("MonkeyTypeStatsCard", () => {
             "rel",
             expect.stringContaining("noopener"),
         );
+    });
+
+    it("renders the same server markup whatever the motion preference", () => {
+        // The server can't see prefers-reduced-motion; if the first render
+        // depended on it, reduced-motion visitors would get a hydration error.
+        const stats = { averagewpm: 120, bestwpm: 151.2 };
+        motionPrefs.reduced = false;
+        const normal = renderToString(<MonkeyTypeStatsCard stats={stats} />);
+        motionPrefs.reduced = true;
+        const reduced = renderToString(<MonkeyTypeStatsCard stats={stats} />);
+        motionPrefs.reduced = false;
+        expect(reduced).toBe(normal);
     });
 });

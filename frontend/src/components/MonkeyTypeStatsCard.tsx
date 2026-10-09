@@ -19,16 +19,17 @@ export default function MonkeyTypeStatsCard({
 }) {
     const reducedMotion = useReducedMotion();
     const target = goalPercentage(stats?.averagewpm ?? 0);
-    const [animated, setAnimated] = useState(0);
-    // With reduced motion the bar just sits at its final value.
-    const progress = reducedMotion ? target : animated;
+    // Always 0 on the first render: the server can't know the visitor's
+    // motion preference, so rendering anything else here would make the
+    // hydrated markup differ from the server's. The count-up runs after
+    // mount, in a single step for reduced motion.
+    const [progress, setProgress] = useState(0);
 
     useEffect(() => {
-        if (reducedMotion) return;
         const controls = animate(0, target, {
-            duration: 1,
+            duration: reducedMotion ? 0 : 1,
             ease: "easeOut",
-            onUpdate: setAnimated,
+            onUpdate: setProgress,
         });
         return () => controls.stop();
     }, [target, reducedMotion]);
