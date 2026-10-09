@@ -1,5 +1,24 @@
+# dependencies
 node_modules
+.venv
+venv
+
+# env files (keep the .env.example files)
 .env
-.codex
+.env.local
+.env.*.local
+
+# build output / caches
 .next
+out
+coverage
+*.tsbuildinfo
 __pycache__
+*.pyc
+.pytest_cache
+.ruff_cache
+
+# tooling
+.codex
+.vercel
+.DS_Store

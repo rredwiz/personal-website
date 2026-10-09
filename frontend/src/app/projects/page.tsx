@@ -1,31 +1,34 @@
-import React from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import ProjectCard from "@/components/ProjectCard";
+// GitHub activity feed: backend route + component are ready, just not shown yet.
 // import GithubEvents from "@/components/GithubEvents";
-// import { GithubCommitEvents } from "@/types";
+// import { getGithubEvents } from "@/lib/api";
 
-// async function getGithubEvents(): Promise<GithubCommitEvents> {
-//     try {
-//         const response = await fetch(
-//             // "https://personal-website-backend-7zk8.onrender.com/github"
-//             "http://localhost:5000/github"
-//         );
-//         if (!response.ok) {
-//             throw new Error(
-//                 `HTTP Error ${response.status}: ${response.statusText}`
-//             );
-//         }
-//         const data: GithubCommitEvents = await response.json();
-//         return data;
-//     } catch (e) {
-//         console.error(`Error occured during a fetch:`, e);
-//         return {
-//             events: [],
-//         };
-//     }
-// }
+export const metadata: Metadata = {
+    title: "projects | andrew's website",
+    description: "Personal projects and things I've built.",
+};
 
-export default async function ProjectsPage() {
+const PROJECTS = [
+    {
+        header: "MC Instance Bot", // keep headers short so they fit the card
+        desc: "Enabled a Discord bot to create and manage Minecraft instances.",
+        url: "https://github.com/rredwiz/alt_manager",
+    },
+    {
+        header: "Syllabuddy AI",
+        desc: "Implemented a syllabus decoder to parse important details.",
+        url: "https://github.com/qZheng/syllabus-decoder",
+    },
+    {
+        header: "Desktop Timer App",
+        desc: "An Electron desktop timer app made for myself and friends.",
+        url: "https://github.com/rredwiz/timer-app",
+    },
+] as const;
+
+export default function ProjectsPage() {
     // const githubEvents = await getGithubEvents();
 
     return (
@@ -36,16 +39,11 @@ export default async function ProjectsPage() {
                         <div className="flex justify-center items-center gap-4">
                             <div className="flex flex-col gap-2">
                                 <p className="text-xs text-white font-mono">
-                                    <a
-                                        href="https://github.com/rredwiz"
-                                        target="_blank"
-                                    >
+                                    <a href="https://github.com/rredwiz" target="_blank" rel="noopener noreferrer">
                                         projects
                                         <span className="text-gray-400">/</span>
                                         README
-                                        <span className="text-gray-400">
-                                            .md
-                                        </span>
+                                        <span className="text-gray-400">.md</span>
                                     </a>
                                 </p>
                                 <Image
@@ -53,22 +51,21 @@ export default async function ProjectsPage() {
                                     className="h-auto w-auto mb-2 md:w-20"
                                     width={153}
                                     height={153}
-                                    alt="minecraft character image"
+                                    alt="Andrew's Minecraft character"
+                                    priority
                                 />
                             </div>
                             <div>
                                 <h1 className="font-semibold text-lg md:text-2xl">
-                                    Personal projects{" "}
-                                    <span className="hidden md:inline">
-                                        and things I've built
-                                    </span>
+                                    Personal projects <span className="hidden md:inline">and things I&apos;ve built</span>
                                 </h1>
-                                <p className="text-gray-400 md:text-md">
+                                <p className="text-gray-400">
                                     They can each be found on my own github{" "}
                                     <a
                                         className="text-gray-300 border-b border-gray-300/70 transition-colors duration-200 ease-in-out hover:text-white hover:border-white"
                                         href="https://github.com/rredwiz"
                                         target="_blank"
+                                        rel="noopener noreferrer"
                                     >
                                         here
                                     </a>
@@ -77,31 +74,10 @@ export default async function ProjectsPage() {
                             </div>
                         </div>
                     </div>
-                    {/* <ProjectCard
-                        header="Desktop Timer App"
-                        imageSrc="/timer-app-example2.png"
-                        imageAlt="timer app example image"
-                        desc="..."
-                    />
-                    */}
-                    {/* TODO: add github events somewhere in the future */}
                     {/* <GithubEvents events={githubEvents.events} /> */}
-                    <ProjectCard
-                        // this header needs to fit, so it needs to be shorter
-                        header="MC Instance Bot"
-                        desc="Enabled a Discord bot to create and manage Minecraft instances."
-                        url="https://github.com/rredwiz/alt_manager"
-                    />
-                    <ProjectCard
-                        url="https://github.com/qZheng/syllabus-decoder"
-                        header="Syllabuddy AI"
-                        desc="Implemented a syllabus decoder to parse important details."
-                    />
-                    <ProjectCard
-                        url="https://github.com/rredwiz/timer-app"
-                        header="Desktop Timer App"
-                        desc="An Electron desktop timer app made for myself and friends."
-                    />
+                    {PROJECTS.map((project) => (
+                        <ProjectCard key={project.url} {...project} />
+                    ))}
                 </div>
             </div>
         </main>

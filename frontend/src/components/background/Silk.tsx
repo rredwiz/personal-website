@@ -1,3 +1,4 @@
+"use client";
 import React, { forwardRef, useMemo, useRef, useLayoutEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import type { RootState } from "@react-three/fiber";
@@ -6,7 +7,7 @@ import type { IUniform } from "three";
 
 type NormalizedRGB = [number, number, number];
 
-const hexToNormalizedRGB = (hex: string): NormalizedRGB => {
+export const hexToNormalizedRGB = (hex: string): NormalizedRGB => {
     const clean = hex.replace("#", "");
     const r = parseInt(clean.slice(0, 2), 16) / 255;
     const g = parseInt(clean.slice(2, 4), 16) / 255;
@@ -89,21 +90,18 @@ interface SilkPlaneProps {
     uniforms: SilkUniforms;
 }
 
-const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(function SilkPlane(
-    { uniforms },
-    ref
-) {
+const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(function SilkPlane({ uniforms }, ref) {
     const { viewport } = useThree();
 
     useLayoutEffect(() => {
-        const mesh = ref as React.MutableRefObject<Mesh | null>;
+        const mesh = ref as React.RefObject<Mesh | null>;
         if (mesh.current) {
             mesh.current.scale.set(viewport.width, viewport.height, 1);
         }
     }, [ref, viewport]);
 
     useFrame((_state: RootState, delta: number) => {
-        const mesh = ref as React.MutableRefObject<Mesh | null>;
+        const mesh = ref as React.RefObject<Mesh | null>;
         if (mesh.current) {
             const material = mesh.current.material as ShaderMaterial & {
                 uniforms: SilkUniforms;
@@ -115,11 +113,7 @@ const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(function SilkPlane(
     return (
         <mesh ref={ref}>
             <planeGeometry args={[1, 1, 1, 1]} />
-            <shaderMaterial
-                uniforms={uniforms}
-                vertexShader={vertexShader}
-                fragmentShader={fragmentShader}
-            />
+            <shaderMaterial uniforms={uniforms} vertexShader={vertexShader} fragmentShader={fragmentShader} />
         </mesh>
     );
 });
@@ -131,6 +125,8 @@ export interface SilkProps {
     color?: string;
     noiseIntensity?: number;
     rotation?: number;
+    /** `"demand"` renders once and then only on resize; use it when motion should be off. */
+    frameloop?: "always" | "demand";
 }
 
 const Silk: React.FC<SilkProps> = ({
@@ -139,6 +135,7 @@ const Silk: React.FC<SilkProps> = ({
     color = "#7B7481",
     noiseIntensity = 1.5,
     rotation = 0,
+    frameloop = "always",
 }) => {
     const meshRef = useRef<Mesh>(null);
 
@@ -151,11 +148,11 @@ const Silk: React.FC<SilkProps> = ({
             uRotation: { value: rotation },
             uTime: { value: 0 },
         }),
-        [speed, scale, noiseIntensity, color, rotation]
+        [speed, scale, noiseIntensity, color, rotation],
     );
 
     return (
-        <Canvas dpr={[1, 2]} frameloop="always">
+        <Canvas dpr={[1, 2]} frameloop={frameloop}>
             <SilkPlane ref={meshRef} uniforms={uniforms} />
         </Canvas>
     );
