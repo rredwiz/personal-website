@@ -88,6 +88,7 @@ New files: `src/lib/{config,api,webgl,theme}.ts`, `src/hooks/usePolling.ts`, 11 
 - `FrozenRoute` imports `next/dist/shared/lib/app-router-context.shared-runtime` (internal). Standard workaround for AnimatePresence exit animations in the App Router; re-check after Next upgrades.
 - Spotify stays unrouted (backend) and un-rendered (frontend); `GithubEvents` + `getGithubEvents()` are ready but not rendered on `/projects`.
 - Copy ("rising junior", "interning at Purolator Digital Lab") is content, not code — Andrew's call.
+- **Known issue (found 2026-10-09): `/github` always returns `{"events": []}`.** GitHub's Events API no longer includes `commits` in `PushEvent` payloads (only `head`/`before`/`ref`), and `create_github_json()` skips pushes without commits. Fix: build `commit_url` from `payload.head`, look the message up via `GET /repos/{repo}/commits/{sha}` for the first few pushes (bounded and cached), and keep accepting the old payload shape. Not user-visible today because nothing renders the feed.
 
 ## First-run watch list (all resolved 2026-10-09)
 
