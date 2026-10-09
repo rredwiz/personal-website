@@ -9,7 +9,7 @@ export default function WarningElement({ className }: { className?: string }) {
                 className,
             )}
         >
-            <InfoIcon className="size-3.5 text-accent transition-transform duration-300 group-hover:rotate-12" />
+            <InfoIcon className="size-3.5 text-ink-faint transition-transform duration-300 group-hover:rotate-12" />
             This site owner is extremely cool.
         </p>
     );

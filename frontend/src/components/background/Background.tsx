@@ -74,9 +74,6 @@ export default function Background() {
                     />
                 </SilkErrorBoundary>
             )}
-            {/* Warm glow behind the nav, and a vignette that pulls focus to the centre. */}
-            <div className="absolute inset-0 bg-[radial-gradient(60%_45%_at_50%_0%,rgb(244_162_97/0.07),transparent_70%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(130%_90%_at_50%_35%,transparent_45%,rgb(0_0_0/0.6))]" />
         </div>
     );
 }

@@ -63,10 +63,8 @@ export default async function OpengraphImage() {
                 alignItems: "center",
                 gap: 64,
                 padding: "0 96px",
-                backgroundColor: "#0f0f11",
-                backgroundImage:
-                    "radial-gradient(circle at 50% -10%, rgba(244,162,97,0.16), transparent 55%), radial-gradient(circle at 15% 110%, rgba(255,255,255,0.06), transparent 50%)",
-                color: "#ededf0",
+                backgroundColor: "#0a0c0f",
+                color: "#c7cbd0",
             }}
         >
             {/* 256 px is the sprite's native size, so no smoothing. */}
@@ -82,14 +80,14 @@ export default async function OpengraphImage() {
                     }}
                 >
                     Hey, I&apos;m&nbsp;
-                    <span style={{ color: "#f4a261" }}>Andrew</span>.
+                    <span style={{ color: "#ffffff" }}>Andrew</span>.
                 </div>
                 <div
                     style={{
                         display: "flex",
                         marginTop: 14,
                         fontSize: 42,
-                        color: "#a6a6b0",
+                        color: "#9ea4ab",
                         fontFamily: fonts ? "Geist" : undefined,
                     }}
                 >
@@ -100,7 +98,7 @@ export default async function OpengraphImage() {
                         display: "flex",
                         marginTop: 44,
                         fontSize: 28,
-                        color: "#85858f",
+                        color: "#80878f",
                         fontFamily: fonts ? "Geist" : undefined,
                     }}
                 >

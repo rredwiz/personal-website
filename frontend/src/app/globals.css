@@ -16,23 +16,26 @@
 }
 
 @theme {
+    /*
+     * Monochrome: every colour is one cool slate hue (oklch h=255) at very
+     * low chroma, varying only in lightness. Text tiers all pass WCAG AA on
+     * the cards (ink-faint is the lowest, ~5:1).
+     */
+
     /* Page and card surfaces. Keep --color-canvas in sync with BASE_COLOR in lib/theme.ts. */
-    --color-canvas: #0f0f11;
-    --color-surface: rgb(17 17 20 / 0.72);
-    --color-line: rgb(255 255 255 / 0.08);
-    --color-line-strong: rgb(255 255 255 / 0.18);
+    --color-canvas: #0a0c0f;
+    --color-surface: rgb(17 20 23 / 0.72);
+    --color-line: rgb(217 223 230 / 0.08);
+    --color-line-strong: rgb(217 223 230 / 0.18);
 
     /* Text, from most to least prominent. */
-    --color-ink: #ededf0;
-    --color-ink-soft: #c9c9d1;
-    --color-ink-muted: #a6a6b0;
-    --color-ink-faint: #85858f;
+    --color-ink: #ebedf0;
+    --color-ink-soft: #c7cbd0;
+    --color-ink-muted: #9ea4ab;
+    --color-ink-faint: #80878f;
 
-    /* Accent: a lighter tint of the avatar's copper hair. Used sparingly. */
-    --color-accent: #f4a261;
-
-    /* Spotify green, only for the "now playing" indicator. */
-    --color-live: #1ed760;
+    /* Pale steel: the same hue, lighter and a touch more saturated. Focus rings, bars, hovers. */
+    --color-accent: #c4d2e5;
 
     --shadow-card:
         inset 0 1px 0 0 rgb(255 255 255 / 0.04), 0 1px 2px rgb(0 0 0 / 0.35),

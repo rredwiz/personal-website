@@ -13,7 +13,7 @@ export const POLL_INTERVAL_MS = 30_000;
 
 type Status = "loading" | "ready" | "error";
 
-const CARD_CLASS = "isolate flex items-center gap-4 overflow-hidden sm:gap-5";
+const CARD_CLASS = "flex items-center gap-4 sm:gap-5";
 /** Fixed size so the row never jumps when the artwork arrives. */
 const ART_CLASS = "size-20 shrink-0 rounded-lg sm:size-24 md:size-32";
 
@@ -24,7 +24,7 @@ function Equalizer() {
             {[0, 0.25, 0.5].map((delay) => (
                 <span
                     key={delay}
-                    className="h-full w-[3px] origin-bottom animate-equalize rounded-full bg-live"
+                    className="h-full w-[3px] origin-bottom animate-equalize rounded-full bg-ink-soft"
                     style={{ animationDelay: `-${delay}s` }}
                 />
             ))}
@@ -102,16 +102,6 @@ export default function RecentlyListenedCard({
 
     return (
         <Card className={cx(CARD_CLASS, className)}>
-            {track.image && (
-                // The artwork, blurred way out, tints the card with the album's colours.
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                    src={track.image}
-                    alt=""
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 -z-10 size-full scale-150 object-cover opacity-25 blur-3xl saturate-150"
-                />
-            )}
             {track.image ? (
                 // Plain <img>: Last.fm's CDN host can change, and next/image
                 // throws at runtime for hosts missing from next.config.
@@ -135,7 +125,7 @@ export default function RecentlyListenedCard({
                 />
             )}
             <div className="min-w-0 flex-1">
-                <CardLabel className={cx(nowPlaying && "text-live")}>
+                <CardLabel className={cx(nowPlaying && "text-ink-soft")}>
                     {nowPlaying ? (
                         <Equalizer />
                     ) : (
@@ -162,6 +152,7 @@ export default function RecentlyListenedCard({
                 </p>
                 <p className="mt-1 truncate text-ink-muted">{track.artist}</p>
             </div>
+            <SpotifyIcon className="hidden size-5 shrink-0 self-start text-ink-faint/60 sm:block" />
         </Card>
     );
 }

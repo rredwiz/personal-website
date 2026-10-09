@@ -54,7 +54,9 @@ function ProfileCard() {
             </div>
             <div>
                 <h1 className="font-display text-[1.75rem] leading-[1.1] font-semibold tracking-tight">
-                    Hey, I&apos;m <span className="text-accent">Andrew</span>.
+                    <span className="text-ink-soft">Hey, I&apos;m</span>{" "}
+                    <span className="text-white">Andrew</span>
+                    <span className="text-ink-soft">.</span>
                 </h1>
                 <p className="mt-1.5 text-ink-muted">
                     CS Student &amp; Developer
@@ -90,7 +92,7 @@ function AboutCard({ className }: { className?: string }) {
             >
                 <span
                     aria-hidden="true"
-                    className="mr-2 font-mono text-xl font-normal text-accent/70"
+                    className="mr-2 font-mono text-xl font-normal text-ink-faint"
                 >
                     #
                 </span>

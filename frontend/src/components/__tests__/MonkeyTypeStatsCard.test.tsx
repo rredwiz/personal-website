@@ -44,9 +44,9 @@ vi.mock("motion/react", async () => {
 });
 
 describe("goalPercentage", () => {
-    it("maps wpm onto 0-100% of the 150 wpm goal", () => {
-        expect(goalPercentage(75)).toBe(50);
-        expect(goalPercentage(150)).toBe(100);
+    it("maps wpm onto 0-100% of the 200 wpm goal", () => {
+        expect(goalPercentage(100)).toBe(50);
+        expect(goalPercentage(200)).toBe(100);
         expect(goalPercentage(300)).toBe(100);
         expect(goalPercentage(0)).toBe(0);
         expect(goalPercentage(-5)).toBe(0);
@@ -55,25 +55,27 @@ describe("goalPercentage", () => {
 });
 
 describe("MonkeyTypeStatsCard", () => {
-    it("shows the average, the best and the progress towards 150 wpm", () => {
+    it("shows only the best score, measured against the 200 wpm goal", () => {
         render(
-            <MonkeyTypeStatsCard stats={{ averagewpm: 120, bestwpm: 151.2 }} />,
+            <MonkeyTypeStatsCard stats={{ averagewpm: 120, bestwpm: 150 }} />,
         );
 
-        expect(screen.getByText("120")).toBeInTheDocument();
-        expect(screen.getByText("151.2")).toBeInTheDocument();
-        expect(screen.getByText("80% of goal")).toBeInTheDocument();
-        expect(screen.getByText("150 wpm")).toBeInTheDocument();
+        expect(screen.getByText("150")).toBeInTheDocument();
+        expect(screen.getByText("wpm best")).toBeInTheDocument();
+        // The average is deliberately not shown.
+        expect(screen.queryByText("120")).not.toBeInTheDocument();
+        expect(screen.getByText("75% of goal")).toBeInTheDocument();
+        expect(screen.getByText("200 wpm")).toBeInTheDocument();
         expect(screen.getByRole("progressbar")).toHaveAttribute(
             "aria-valuenow",
-            "80",
+            "75",
         );
     });
 
     it("shows a fallback instead of 'undefined wpm' when stats are unavailable", () => {
         render(<MonkeyTypeStatsCard stats={null} />);
 
-        expect(screen.getAllByText("—")).toHaveLength(2);
+        expect(screen.getAllByText("—")).toHaveLength(1);
         expect(
             screen.getByText("typing stats unavailable"),
         ).toBeInTheDocument();
