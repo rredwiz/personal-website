@@ -6,7 +6,7 @@ _Written 2026-10-09 by the agent that did the audit; updated the same day by the
 
 | Area | State |
 | --- | --- |
-| Branch | `fix/audit`, 9 commits on top of `master` (`94678a5`). **Not pushed**, and Andrew asked that nothing go to `master` yet. |
+| Branch | `fix/audit`, on top of `master` (`94678a5`); `git log --oneline master..fix/audit` lists the commits. **Not pushed**, and Andrew asked that nothing go to `master` yet. |
 | Backend (`backend/`) | **Verified.** `ruff check .`, `ruff format --check .` and 56 pytest tests pass (Python 3.14 locally; CI uses 3.13). The second session fixed one `ruff` failure (missing newline in `src/apis/__init__.py`) that would have failed CI. |
 | Frontend (`frontend/`) | **Verified.** Clean `npm ci` (npm 10.9.8, as in CI) → `lint` (0 problems, 37 files, React Compiler rules active) → `typecheck` (also with no `.next/`, as in CI) → `test` (61 tests) → `build` all pass on Next 16.4.0. |
 | Visual parity | **Verified in a browser** against a `master` build: home and projects at 1024×768 and 390×844 match element-for-element (bounding boxes, font sizes, colours). Only differences: the intended nav underline (makes the nav pill 1 px taller), the `/projects` tab title, and the fixed body-overflow bug (`master` leaves inline `overflow: auto` on `<body>` after one navigation). No console errors. |
