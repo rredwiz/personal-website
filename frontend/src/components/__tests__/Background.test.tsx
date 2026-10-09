@@ -9,7 +9,13 @@ vi.mock("@/lib/webgl", () => ({ supportsWebGL }));
 vi.mock("@/components/background/Silk", () => ({
     default: (props: { speed: number; frameloop: string }) => {
         if (silkMode.throwOnRender) throw new Error("WebGL context lost");
-        return <div data-testid="silk" data-speed={props.speed} data-frameloop={props.frameloop} />;
+        return (
+            <div
+                data-testid="silk"
+                data-speed={props.speed}
+                data-frameloop={props.frameloop}
+            />
+        );
     },
 }));
 vi.mock("motion/react", () => ({ useReducedMotion: () => false }));
@@ -39,8 +45,14 @@ describe("Background", () => {
             vi.advanceTimersByTime(250);
         });
         expect(screen.getByTestId("silk")).toHaveAttribute("data-speed", "5");
-        expect(screen.getByTestId("silk")).toHaveAttribute("data-frameloop", "always");
-        expect(container.firstChild).toHaveClass("opacity-100", "transition-opacity");
+        expect(screen.getByTestId("silk")).toHaveAttribute(
+            "data-frameloop",
+            "always",
+        );
+        expect(container.firstChild).toHaveClass(
+            "opacity-100",
+            "transition-opacity",
+        );
         expect(document.body.classList.contains("bg-[#232323]")).toBe(false);
     });
 

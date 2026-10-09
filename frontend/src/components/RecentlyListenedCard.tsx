@@ -9,7 +9,8 @@ export const POLL_INTERVAL_MS = 30_000;
 
 type Status = "loading" | "ready" | "error";
 
-const CARD_CLASS = "p-4 col-span-2 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25";
+const CARD_CLASS =
+    "p-4 col-span-2 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25";
 
 export default function RecentlyListenedCard() {
     const [track, setTrack] = useState<RecentTrack | null>(null);
@@ -36,7 +37,9 @@ export default function RecentlyListenedCard() {
         return (
             <div className={CARD_CLASS}>
                 <p className="text-gray-400 h-25" role="status">
-                    {status === "error" ? "Listening history unavailable." : "Loading Listening History..."}
+                    {status === "error"
+                        ? "Listening history unavailable."
+                        : "Loading Listening History..."}
                 </p>
             </div>
         );
@@ -61,11 +64,16 @@ export default function RecentlyListenedCard() {
                         decoding="async"
                     />
                 ) : (
-                    <div className="w-25 h-25 shrink-0 rounded-md bg-white/5" aria-hidden="true" />
+                    <div
+                        className="w-25 h-25 shrink-0 rounded-md bg-white/5"
+                        aria-hidden="true"
+                    />
                 )}
                 <div className="flex w-[100%] min-h-25 justify-center flex-col">
                     <h2 className="text-sm">
-                        {nowPlaying ? "Currently listening on Spotify" : "Recently Listened to on Spotify"}
+                        {nowPlaying
+                            ? "Currently listening on Spotify"
+                            : "Recently Listened to on Spotify"}
                     </h2>
                     <p className="text-lg">{track.songname}</p>
                     <p className="text-gray-400">{track.artist}</p>

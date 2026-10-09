@@ -9,8 +9,8 @@ export function supportsWebGL(): boolean {
         const canvas = document.createElement("canvas");
         return Boolean(
             canvas.getContext("webgl2") ??
-                canvas.getContext("webgl") ??
-                canvas.getContext("experimental-webgl"),
+            canvas.getContext("webgl") ??
+            canvas.getContext("experimental-webgl"),
         );
     } catch {
         return false;

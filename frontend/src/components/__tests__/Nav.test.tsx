@@ -22,16 +22,32 @@ describe("Nav", () => {
         usePathname.mockReturnValue("/projects");
         render(<Nav className="nav-class" />);
 
-        expect(screen.getByRole("navigation", { name: "Primary" })).toHaveClass("nav-class");
-        expect(screen.getByRole("link", { name: "Projects" })).toHaveAttribute("aria-current", "page");
-        expect(screen.getByRole("link", { name: "Home" })).not.toHaveAttribute("aria-current");
+        expect(screen.getByRole("navigation", { name: "Primary" })).toHaveClass(
+            "nav-class",
+        );
+        expect(screen.getByRole("link", { name: "Projects" })).toHaveAttribute(
+            "aria-current",
+            "page",
+        );
+        expect(screen.getByRole("link", { name: "Home" })).not.toHaveAttribute(
+            "aria-current",
+        );
     });
 
     it("marks home on the root path", () => {
         usePathname.mockReturnValue("/");
         render(<Nav />);
-        expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("aria-current", "page");
-        expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/");
-        expect(screen.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "/projects");
+        expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute(
+            "aria-current",
+            "page",
+        );
+        expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute(
+            "href",
+            "/",
+        );
+        expect(screen.getByRole("link", { name: "Projects" })).toHaveAttribute(
+            "href",
+            "/projects",
+        );
     });
 });

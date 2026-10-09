@@ -3,7 +3,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { usePolling } from "@/hooks/usePolling";
 
 function setVisibility(state: DocumentVisibilityState) {
-    Object.defineProperty(document, "visibilityState", { configurable: true, get: () => state });
+    Object.defineProperty(document, "visibilityState", {
+        configurable: true,
+        get: () => state,
+    });
     document.dispatchEvent(new Event("visibilitychange"));
 }
 
@@ -71,7 +74,9 @@ describe("usePolling", () => {
     it("always calls the latest task without resubscribing", () => {
         const first = vi.fn();
         const second = vi.fn();
-        const { rerender } = renderHook(({ task }) => usePolling(task, 1000), { initialProps: { task: first } });
+        const { rerender } = renderHook(({ task }) => usePolling(task, 1000), {
+            initialProps: { task: first },
+        });
         expect(first).toHaveBeenCalledTimes(1);
 
         rerender({ task: second });

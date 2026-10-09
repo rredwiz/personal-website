@@ -12,7 +12,10 @@ const FADE_IN_DELAY_MS = 200;
  * If the shader throws (GPU blocklisted, context lost at startup, ...) we keep
  * the flat background instead of taking the whole page down with it.
  */
-class SilkErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+class SilkErrorBoundary extends Component<
+    { children: ReactNode },
+    { failed: boolean }
+> {
     state = { failed: false };
 
     static getDerivedStateFromError() {
@@ -20,7 +23,10 @@ class SilkErrorBoundary extends Component<{ children: ReactNode }, { failed: boo
     }
 
     componentDidCatch(error: unknown) {
-        console.warn("Animated background failed to initialise; using a flat background instead.", error);
+        console.warn(
+            "Animated background failed to initialise; using a flat background instead.",
+            error,
+        );
     }
 
     render() {

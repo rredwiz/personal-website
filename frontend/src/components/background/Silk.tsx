@@ -90,7 +90,10 @@ interface SilkPlaneProps {
     uniforms: SilkUniforms;
 }
 
-const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(function SilkPlane({ uniforms }, ref) {
+const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(function SilkPlane(
+    { uniforms },
+    ref,
+) {
     const { viewport } = useThree();
 
     useLayoutEffect(() => {
@@ -113,7 +116,11 @@ const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(function SilkPlane({ uniforms
     return (
         <mesh ref={ref}>
             <planeGeometry args={[1, 1, 1, 1]} />
-            <shaderMaterial uniforms={uniforms} vertexShader={vertexShader} fragmentShader={fragmentShader} />
+            <shaderMaterial
+                uniforms={uniforms}
+                vertexShader={vertexShader}
+                fragmentShader={fragmentShader}
+            />
         </mesh>
     );
 });

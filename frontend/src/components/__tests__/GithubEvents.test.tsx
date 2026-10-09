@@ -18,7 +18,8 @@ describe("GithubEvents", () => {
                         message: "fix: things",
                         repo_name: "rredwiz/personal-website",
                         repo_url: "https://github.com/rredwiz/personal-website",
-                        commit_url: "https://github.com/rredwiz/personal-website/commit/abc",
+                        commit_url:
+                            "https://github.com/rredwiz/personal-website/commit/abc",
                         type: "PushEvent",
                         created_at: "2026-10-01T12:00:00Z",
                     },
@@ -26,11 +27,15 @@ describe("GithubEvents", () => {
             />,
         );
 
-        expect(screen.getByRole("link", { name: "rredwiz/personal-website" })).toHaveAttribute(
+        expect(
+            screen.getByRole("link", { name: "rredwiz/personal-website" }),
+        ).toHaveAttribute(
             "href",
             "https://github.com/rredwiz/personal-website",
         );
-        expect(screen.getByRole("link", { name: "fix: things" })).toHaveAttribute(
+        expect(
+            screen.getByRole("link", { name: "fix: things" }),
+        ).toHaveAttribute(
             "href",
             "https://github.com/rredwiz/personal-website/commit/abc",
         );
@@ -39,6 +44,8 @@ describe("GithubEvents", () => {
 
     it("has an empty state", () => {
         render(<GithubEvents events={[]} />);
-        expect(screen.getByText("No recent public activity.")).toBeInTheDocument();
+        expect(
+            screen.getByText("No recent public activity."),
+        ).toBeInTheDocument();
     });
 });

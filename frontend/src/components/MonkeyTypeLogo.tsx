@@ -1,4 +1,10 @@
-export default function MonkeyTypeLogo({ width = 24, height = 24 }: { width?: number; height?: number }) {
+export default function MonkeyTypeLogo({
+    width = 24,
+    height = 24,
+}: {
+    width?: number;
+    height?: number;
+}) {
     return (
         <a
             href="https://monkeytype.com/profile/redwiz"

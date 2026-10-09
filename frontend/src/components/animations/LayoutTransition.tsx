@@ -12,7 +12,11 @@ const SCROLL_UNLOCK_DELAY_MS = 100;
  * page is animating in or out so the scrollbar doesn't flash; only
  * `overflow-y` is touched so the layout's `overflow-x-hidden` stays intact.
  */
-export default function LayoutTransition({ children }: { children: ReactNode }) {
+export default function LayoutTransition({
+    children,
+}: {
+    children: ReactNode;
+}) {
     const pathname = usePathname();
     const unlockTimer = useRef<number | null>(null);
 
@@ -46,7 +50,11 @@ export default function LayoutTransition({ children }: { children: ReactNode }) 
     }, []);
 
     return (
-        <AnimatePresence mode="wait" initial={false} onExitComplete={unlockScroll}>
+        <AnimatePresence
+            mode="wait"
+            initial={false}
+            onExitComplete={unlockScroll}
+        >
             <motion.div
                 key={pathname}
                 initial={{ opacity: 0, y: -30 }}

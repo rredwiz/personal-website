@@ -9,7 +9,10 @@ import {
     parseTypingScore,
 } from "@/lib/api";
 
-function jsonResponse(body: unknown, init: { ok?: boolean; status?: number } = {}) {
+function jsonResponse(
+    body: unknown,
+    init: { ok?: boolean; status?: number } = {},
+) {
     const { ok = true, status = 200 } = init;
     return {
         ok,
@@ -21,7 +24,10 @@ function jsonResponse(body: unknown, init: { ok?: boolean; status?: number } = {
 
 describe("parseTypingScore", () => {
     it("accepts a well-formed payload", () => {
-        expect(parseTypingScore({ averagewpm: 120.4, bestwpm: 151 })).toEqual({ averagewpm: 120.4, bestwpm: 151 });
+        expect(parseTypingScore({ averagewpm: 120.4, bestwpm: 151 })).toEqual({
+            averagewpm: 120.4,
+            bestwpm: 151,
+        });
     });
 
     it.each([
@@ -46,10 +52,15 @@ describe("getMonkeytypeData", () => {
     });
 
     it("returns the parsed stats and asks for hourly revalidation", async () => {
-        const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ averagewpm: 100, bestwpm: 140 }));
+        const fetchMock = vi
+            .fn()
+            .mockResolvedValue(jsonResponse({ averagewpm: 100, bestwpm: 140 }));
         vi.stubGlobal("fetch", fetchMock);
 
-        await expect(getMonkeytypeData()).resolves.toEqual({ averagewpm: 100, bestwpm: 140 });
+        await expect(getMonkeytypeData()).resolves.toEqual({
+            averagewpm: 100,
+            bestwpm: 140,
+        });
 
         const [url, init] = fetchMock.mock.calls[0];
         expect(url).toMatch(/\/monkeytype$/);
@@ -57,18 +68,31 @@ describe("getMonkeytypeData", () => {
     });
 
     it("returns null (not NaN-producing zeros) when the backend answers with an error", async () => {
-        vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse({ error: "down" }, { ok: false, status: 502 })));
+        vi.stubGlobal(
+            "fetch",
+            vi
+                .fn()
+                .mockResolvedValue(
+                    jsonResponse({ error: "down" }, { ok: false, status: 502 }),
+                ),
+        );
         await expect(getMonkeytypeData()).resolves.toBeNull();
         expect(console.error).toHaveBeenCalled();
     });
 
     it("returns null when the payload has the wrong shape", async () => {
-        vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse({ error: "x" })));
+        vi.stubGlobal(
+            "fetch",
+            vi.fn().mockResolvedValue(jsonResponse({ error: "x" })),
+        );
         await expect(getMonkeytypeData()).resolves.toBeNull();
     });
 
     it("returns null when fetch itself throws", async () => {
-        vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("network down")));
+        vi.stubGlobal(
+            "fetch",
+            vi.fn().mockRejectedValue(new TypeError("network down")),
+        );
         await expect(getMonkeytypeData()).resolves.toBeNull();
     });
 });
@@ -94,8 +118,17 @@ describe("parseRecentTrack / isNowPlaying", () => {
     });
 
     it("tolerates missing image and legacy string booleans", () => {
-        const track = parseRecentTrack({ songname: "S", artist: "A", currentlylistening: "True" });
-        expect(track).toEqual({ songname: "S", artist: "A", image: "", currentlylistening: "True" });
+        const track = parseRecentTrack({
+            songname: "S",
+            artist: "A",
+            currentlylistening: "True",
+        });
+        expect(track).toEqual({
+            songname: "S",
+            artist: "A",
+            image: "",
+            currentlylistening: "True",
+        });
         expect(isNowPlaying(track!)).toBe(true);
     });
 
@@ -123,23 +156,47 @@ describe("fetchRecentTrack", () => {
     });
 
     it("passes the abort signal through and skips the HTTP cache", async () => {
-        const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ songname: "S", artist: "A", image: "", currentlylistening: false }));
+        const fetchMock = vi.fn().mockResolvedValue(
+            jsonResponse({
+                songname: "S",
+                artist: "A",
+                image: "",
+                currentlylistening: false,
+            }),
+        );
         vi.stubGlobal("fetch", fetchMock);
         const controller = new AbortController();
 
-        await expect(fetchRecentTrack(controller.signal)).resolves.toMatchObject({ songname: "S" });
+        await expect(
+            fetchRecentTrack(controller.signal),
+        ).resolves.toMatchObject({ songname: "S" });
 
         const [url, init] = fetchMock.mock.calls[0];
         expect(url).toMatch(/\/lastfm$/);
-        expect(init).toMatchObject({ signal: controller.signal, cache: "no-store" });
+        expect(init).toMatchObject({
+            signal: controller.signal,
+            cache: "no-store",
+        });
     });
 
     it("throws on HTTP errors and malformed payloads", async () => {
-        vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse({ error: "x" }, { ok: false, status: 502 })));
+        vi.stubGlobal(
+            "fetch",
+            vi
+                .fn()
+                .mockResolvedValue(
+                    jsonResponse({ error: "x" }, { ok: false, status: 502 }),
+                ),
+        );
         await expect(fetchRecentTrack()).rejects.toThrow(/HTTP 502/);
 
-        vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse({ error: "x" })));
-        await expect(fetchRecentTrack()).rejects.toThrow(/unexpected response shape/);
+        vi.stubGlobal(
+            "fetch",
+            vi.fn().mockResolvedValue(jsonResponse({ error: "x" })),
+        );
+        await expect(fetchRecentTrack()).rejects.toThrow(
+            /unexpected response shape/,
+        );
     });
 });
 
@@ -158,7 +215,9 @@ describe("GitHub events", () => {
     };
 
     it("drops malformed entries but keeps good ones", () => {
-        expect(parseGithubEvents({ events: [event, { message: 1 }, null] })).toEqual({ events: [event] });
+        expect(
+            parseGithubEvents({ events: [event, { message: 1 }, null] }),
+        ).toEqual({ events: [event] });
         expect(parseGithubEvents({ nope: true })).toBeNull();
     });
 
@@ -167,7 +226,10 @@ describe("GitHub events", () => {
         vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("boom")));
         await expect(getGithubEvents()).resolves.toEqual({ events: [] });
 
-        vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse({ events: [event] })));
+        vi.stubGlobal(
+            "fetch",
+            vi.fn().mockResolvedValue(jsonResponse({ events: [event] })),
+        );
         await expect(getGithubEvents()).resolves.toEqual({ events: [event] });
     });
 });

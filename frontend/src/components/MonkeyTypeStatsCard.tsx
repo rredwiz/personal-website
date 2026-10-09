@@ -12,7 +12,11 @@ export function goalPercentage(averagewpm: number): number {
     return Math.min((averagewpm / WPM_GOAL) * 100, 100);
 }
 
-export default function MonkeyTypeStatsCard({ stats }: { stats: TypingScore | null }) {
+export default function MonkeyTypeStatsCard({
+    stats,
+}: {
+    stats: TypingScore | null;
+}) {
     const reducedMotion = useReducedMotion();
     const target = goalPercentage(stats?.averagewpm ?? 0);
     const [animated, setAnimated] = useState(0);
@@ -59,11 +63,17 @@ export default function MonkeyTypeStatsCard({ stats }: { stats: TypingScore | nu
                     <motion.div
                         initial={false}
                         animate={{ width: `${progress}%` }}
-                        transition={reducedMotion ? { duration: 0 } : { duration: 0.5, ease: "easeOut" }}
+                        transition={
+                            reducedMotion
+                                ? { duration: 0 }
+                                : { duration: 0.5, ease: "easeOut" }
+                        }
                         className="absolute h-full bg-gray-400 rounded-3xl"
                     />
                     <div className="absolute inset-0 flex items-center justify-center text-sm font-medium text-white">
-                        {stats ? `${progress.toFixed(1)}% to ${WPM_GOAL}wpm` : "typing stats unavailable"}
+                        {stats
+                            ? `${progress.toFixed(1)}% to ${WPM_GOAL}wpm`
+                            : "typing stats unavailable"}
                     </div>
                 </div>
             </div>

@@ -21,14 +21,34 @@ export default function Nav({ className }: { className?: string }) {
     return (
         <nav className={className} aria-label="Primary">
             <div className="grid rounded-xl bg-black/25 border-gray-500/25 border-1 grid-cols-2">
-                <Link className={LINK_CLASS} href="/" aria-current={homeActive ? "page" : undefined}>
+                <Link
+                    className={LINK_CLASS}
+                    href="/"
+                    aria-current={homeActive ? "page" : undefined}
+                >
                     <div className={homeActive ? ACTIVE_CLASS : ""}>
-                        <Image src="/home-icon.svg" width={24} height={24} alt="Home" />
+                        <Image
+                            src="/home-icon.svg"
+                            width={24}
+                            height={24}
+                            alt="Home"
+                        />
                     </div>
                 </Link>
-                <Link className={LINK_CLASS} href="/projects" aria-current={projectsActive ? "page" : undefined}>
-                    <div className={`${projectsActive ? ACTIVE_CLASS : ""} w-6 h-6 flex justify-center items-center`}>
-                        <Image src="/project-icon.svg" width={16} height={16} alt="Projects" />
+                <Link
+                    className={LINK_CLASS}
+                    href="/projects"
+                    aria-current={projectsActive ? "page" : undefined}
+                >
+                    <div
+                        className={`${projectsActive ? ACTIVE_CLASS : ""} w-6 h-6 flex justify-center items-center`}
+                    >
+                        <Image
+                            src="/project-icon.svg"
+                            width={16}
+                            height={16}
+                            alt="Projects"
+                        />
                     </div>
                 </Link>
             </div>

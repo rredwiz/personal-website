@@ -21,8 +21,14 @@ vi.mock("next/image", () => ({
         delete rest.priority;
         delete rest.fill;
         delete rest.unoptimized;
-        // eslint-disable-next-line @next/next/no-img-element
-        return <img src={typeof src === "string" ? src : src.src} alt={alt ?? ""} {...rest} />;
+        return (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+                src={typeof src === "string" ? src : src.src}
+                alt={alt ?? ""}
+                {...rest}
+            />
+        );
     },
 }));
 
@@ -34,7 +40,10 @@ type MockLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
 // next/link renders an <a>; the router isn't needed for these components.
 vi.mock("next/link", () => ({
     default: ({ href, children, ...rest }: MockLinkProps) => (
-        <a href={typeof href === "string" ? href : (href.pathname ?? "")} {...rest}>
+        <a
+            href={typeof href === "string" ? href : (href.pathname ?? "")}
+            {...rest}
+        >
             {children}
         </a>
     ),

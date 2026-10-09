@@ -15,7 +15,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 async function requestJson(path: string, init?: RequestInit): Promise<unknown> {
     const response = await fetch(backendUrl(path), init);
     if (!response.ok) {
-        throw new Error(`HTTP ${response.status}${response.statusText ? ` ${response.statusText}` : ""}`);
+        throw new Error(
+            `HTTP ${response.status}${response.statusText ? ` ${response.statusText}` : ""}`,
+        );
     }
     return response.json();
 }
@@ -60,7 +62,8 @@ export function parseRecentTrack(data: unknown): RecentTrack | null {
         artist,
         image: typeof image === "string" ? image : "",
         currentlylistening:
-            typeof currentlylistening === "boolean" || typeof currentlylistening === "string"
+            typeof currentlylistening === "boolean" ||
+            typeof currentlylistening === "string"
                 ? currentlylistening
                 : false,
         ...(typeof url === "string" && url ? { url } : {}),
@@ -68,13 +71,20 @@ export function parseRecentTrack(data: unknown): RecentTrack | null {
 }
 
 /** True when the track is playing right now (accepts the legacy `"True"` string). */
-export function isNowPlaying(track: Pick<RecentTrack, "currentlylistening">): boolean {
+export function isNowPlaying(
+    track: Pick<RecentTrack, "currentlylistening">,
+): boolean {
     const value = track.currentlylistening;
-    return value === true || (typeof value === "string" && value.toLowerCase() === "true");
+    return (
+        value === true ||
+        (typeof value === "string" && value.toLowerCase() === "true")
+    );
 }
 
 /** Client-side fetch of the most recent track. Throws on failure so the caller can decide what to show. */
-export async function fetchRecentTrack(signal?: AbortSignal): Promise<RecentTrack> {
+export async function fetchRecentTrack(
+    signal?: AbortSignal,
+): Promise<RecentTrack> {
     const data = await requestJson("/lastfm", { signal, cache: "no-store" });
     const parsed = parseRecentTrack(data);
     if (!parsed) throw new Error("unexpected response shape");
@@ -102,7 +112,9 @@ export function parseGithubEvents(data: unknown): GithubCommitEvents | null {
 
 export async function getGithubEvents(): Promise<GithubCommitEvents> {
     try {
-        const parsed = parseGithubEvents(await requestJson("/github", { next: { revalidate: 300 } }));
+        const parsed = parseGithubEvents(
+            await requestJson("/github", { next: { revalidate: 300 } }),
+        );
         if (!parsed) throw new Error("unexpected response shape");
         return parsed;
     } catch (error) {

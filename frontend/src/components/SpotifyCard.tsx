@@ -7,20 +7,33 @@ import { backendUrl } from "@/lib/config";
 // integration is ready. Kept in sync with the polling/abort behaviour of
 // RecentlyListenedCard so it can be dropped in later.
 const POLL_INTERVAL_MS = 20_000;
-const CARD_CLASS = "p-4 col-span-2 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25";
+const CARD_CLASS =
+    "p-4 col-span-2 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25";
 
 export default function SpotifyCard() {
-    const [spotifyIframeUrl, setSpotifyIframeUrl] = useState<string | null>(null);
+    const [spotifyIframeUrl, setSpotifyIframeUrl] = useState<string | null>(
+        null,
+    );
 
     const refresh = useCallback(async (signal: AbortSignal) => {
         try {
-            const response = await fetch(backendUrl("/spotify"), { signal, cache: "no-store" });
+            const response = await fetch(backendUrl("/spotify"), {
+                signal,
+                cache: "no-store",
+            });
             if (!response.ok) {
-                throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);
+                throw new Error(
+                    `HTTP Error ${response.status}: ${response.statusText}`,
+                );
             }
             const data: unknown = await response.json();
             if (signal.aborted) return;
-            setSpotifyIframeUrl(typeof data === "string" && data.startsWith("https://open.spotify.com/") ? data : null);
+            setSpotifyIframeUrl(
+                typeof data === "string" &&
+                    data.startsWith("https://open.spotify.com/")
+                    ? data
+                    : null,
+            );
         } catch (error) {
             if (signal.aborted) return;
             console.error("Could not load the Spotify player:", error);

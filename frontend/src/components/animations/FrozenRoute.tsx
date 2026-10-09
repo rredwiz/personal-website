@@ -12,5 +12,9 @@ export default function FrozenRoute({ children }: { children: ReactNode }) {
     // useState keeps the very first context value for the life of the component.
     const [frozen] = useState(context);
 
-    return <LayoutRouterContext.Provider value={frozen}>{children}</LayoutRouterContext.Provider>;
+    return (
+        <LayoutRouterContext.Provider value={frozen}>
+            {children}
+        </LayoutRouterContext.Provider>
+    );
 }

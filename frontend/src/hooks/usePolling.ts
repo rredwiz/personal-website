@@ -8,7 +8,10 @@ import { useEffect, useRef } from "react";
  * Each run gets an `AbortSignal` that is aborted when a newer run starts or the
  * component unmounts, so a slow response can never overwrite a newer one.
  */
-export function usePolling(task: (signal: AbortSignal) => Promise<void> | void, intervalMs: number): void {
+export function usePolling(
+    task: (signal: AbortSignal) => Promise<void> | void,
+    intervalMs: number,
+): void {
     // Always call the latest `task` without re-subscribing the interval on every render.
     const taskRef = useRef(task);
     useEffect(() => {

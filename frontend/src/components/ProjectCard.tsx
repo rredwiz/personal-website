@@ -8,7 +8,13 @@ interface ProjectCardProps {
     desc?: string;
 }
 
-export default function ProjectCard({ header, url, imageSrc, imageAlt, desc }: ProjectCardProps) {
+export default function ProjectCard({
+    header,
+    url,
+    imageSrc,
+    imageAlt,
+    desc,
+}: ProjectCardProps) {
     const title = header ?? "Work in progress...";
 
     return (
@@ -33,7 +39,9 @@ export default function ProjectCard({ header, url, imageSrc, imageAlt, desc }: P
                 />
             )}
             <h3>{title}</h3>
-            <p className="text-gray-400 text-sm">{desc ?? "Sample description..."}</p>
+            <p className="text-gray-400 text-sm">
+                {desc ?? "Sample description..."}
+            </p>
         </div>
     );
 }

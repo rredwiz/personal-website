@@ -39,11 +39,17 @@ export default function ProjectsPage() {
                         <div className="flex justify-center items-center gap-4">
                             <div className="flex flex-col gap-2">
                                 <p className="text-xs text-white font-mono">
-                                    <a href="https://github.com/rredwiz" target="_blank" rel="noopener noreferrer">
+                                    <a
+                                        href="https://github.com/rredwiz"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
                                         projects
                                         <span className="text-gray-400">/</span>
                                         README
-                                        <span className="text-gray-400">.md</span>
+                                        <span className="text-gray-400">
+                                            .md
+                                        </span>
                                     </a>
                                 </p>
                                 <Image
@@ -57,7 +63,10 @@ export default function ProjectsPage() {
                             </div>
                             <div>
                                 <h1 className="font-semibold text-lg md:text-2xl">
-                                    Personal projects <span className="hidden md:inline">and things I&apos;ve built</span>
+                                    Personal projects{" "}
+                                    <span className="hidden md:inline">
+                                        and things I&apos;ve built
+                                    </span>
                                 </h1>
                                 <p className="text-gray-400">
                                     They can each be found on my own github{" "}

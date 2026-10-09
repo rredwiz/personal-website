@@ -1,12 +1,15 @@
 import { act, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import RecentlyListenedCard, { POLL_INTERVAL_MS } from "@/components/RecentlyListenedCard";
+import RecentlyListenedCard, {
+    POLL_INTERVAL_MS,
+} from "@/components/RecentlyListenedCard";
 import type { RecentTrack } from "@/types";
 
 const fetchRecentTrack = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/api", async () => {
-    const actual = await vi.importActual<typeof import("@/lib/api")>("@/lib/api");
+    const actual =
+        await vi.importActual<typeof import("@/lib/api")>("@/lib/api");
     return { ...actual, fetchRecentTrack };
 });
 
@@ -18,7 +21,10 @@ const TRACK: RecentTrack = {
 };
 
 function setVisibility(state: DocumentVisibilityState) {
-    Object.defineProperty(document, "visibilityState", { configurable: true, get: () => state });
+    Object.defineProperty(document, "visibilityState", {
+        configurable: true,
+        get: () => state,
+    });
     document.dispatchEvent(new Event("visibilitychange"));
 }
 
@@ -37,22 +43,34 @@ describe("RecentlyListenedCard", () => {
         fetchRecentTrack.mockResolvedValue(TRACK);
         render(<RecentlyListenedCard />);
 
-        expect(screen.getByRole("status")).toHaveTextContent("Loading Listening History...");
+        expect(screen.getByRole("status")).toHaveTextContent(
+            "Loading Listening History...",
+        );
 
         await act(async () => {});
 
-        expect(screen.getByText("Recently Listened to on Spotify")).toBeInTheDocument();
+        expect(
+            screen.getByText("Recently Listened to on Spotify"),
+        ).toBeInTheDocument();
         expect(screen.getByText(TRACK.songname)).toBeInTheDocument();
         expect(screen.getByText("Daft Punk")).toBeInTheDocument();
         expect(screen.getByRole("img")).toHaveAttribute("src", TRACK.image);
-        expect(screen.getByRole("img")).toHaveAttribute("alt", expect.stringContaining("Daft Punk"));
+        expect(screen.getByRole("img")).toHaveAttribute(
+            "alt",
+            expect.stringContaining("Daft Punk"),
+        );
     });
 
     it("recognises the legacy 'True' string as now playing", async () => {
-        fetchRecentTrack.mockResolvedValue({ ...TRACK, currentlylistening: "True" });
+        fetchRecentTrack.mockResolvedValue({
+            ...TRACK,
+            currentlylistening: "True",
+        });
         render(<RecentlyListenedCard />);
         await act(async () => {});
-        expect(screen.getByText("Currently listening on Spotify")).toBeInTheDocument();
+        expect(
+            screen.getByText("Currently listening on Spotify"),
+        ).toBeInTheDocument();
     });
 
     it("renders a placeholder instead of a broken image when there is no album art", async () => {
@@ -67,11 +85,15 @@ describe("RecentlyListenedCard", () => {
         fetchRecentTrack.mockRejectedValue(new Error("HTTP 502"));
         render(<RecentlyListenedCard />);
         await act(async () => {});
-        expect(screen.getByRole("status")).toHaveTextContent("Listening history unavailable.");
+        expect(screen.getByRole("status")).toHaveTextContent(
+            "Listening history unavailable.",
+        );
     });
 
     it("keeps the last good track when a later refresh fails", async () => {
-        fetchRecentTrack.mockResolvedValueOnce(TRACK).mockRejectedValueOnce(new Error("HTTP 502"));
+        fetchRecentTrack
+            .mockResolvedValueOnce(TRACK)
+            .mockRejectedValueOnce(new Error("HTTP 502"));
         render(<RecentlyListenedCard />);
         await act(async () => {});
         expect(screen.getByText(TRACK.songname)).toBeInTheDocument();

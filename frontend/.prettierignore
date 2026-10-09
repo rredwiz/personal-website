@@ -2,3 +2,7 @@
 node_modules
 package-lock.json
 public
+
+# written by Next.js; formatting them here would fight its own writer
+tsconfig.json
+next-env.d.ts
