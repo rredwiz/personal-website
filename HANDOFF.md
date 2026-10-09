@@ -10,7 +10,7 @@ _Written 2026-10-09 by the agent that did the audit; updated the same day by the
 | Backend (`backend/`) | **Verified.** `ruff check .`, `ruff format --check .` and 56 pytest tests pass (Python 3.14 locally; CI uses 3.13). The second session fixed one `ruff` failure (missing newline in `src/apis/__init__.py`) that would have failed CI. |
 | Frontend (`frontend/`) | **Verified.** Clean `npm ci` (npm 10.9.8, as in CI) → `lint` (0 problems, 37 files, React Compiler rules active) → `typecheck` (also with no `.next/`, as in CI) → `test` (61 tests) → `build` all pass on Next 16.4.0. |
 | Visual parity | **Verified in a browser** against a `master` build: home and projects at 1024×768 and 390×844 match element-for-element (bounding boxes, font sizes, colours). Only differences: the intended nav underline (makes the nav pill 1 px taller), the `/projects` tab title, and the fixed body-overflow bug (`master` leaves inline `overflow: auto` on `<body>` after one navigation). No console errors. |
-| Design pass | Branch `design/visual-refresh` from `fix/audit` (see the brief at the bottom). |
+| Design pass | **Done, awaiting Andrew's review** on `design/visual-refresh` (rebased onto the latest `fix/audit`). See "Design pass" at the bottom. |
 
 ## What the second session changed
 
@@ -126,12 +126,26 @@ The first session couldn't run the frontend; this was its list of things to watc
 7. Prettier: **run, own commit.**
 8. Deploy notes still apply: Render needs no config change (`Procfile` unchanged, `requirements.txt` just lost `flask-cors`); optionally set `CORS_ORIGINS=https://andster.dev,https://www.andster.dev`. Vercel: nothing to change; `NEXT_PUBLIC_BACKEND_URL` is optional. The new frontend accepts both the old and the new backend response shapes, so the two can deploy in either order.
 
-## Design-pass brief (pass 2 — "go all out", separate branch)
+## Design pass (branch `design/visual-refresh`)
 
-**Setup:** `git checkout -b design/visual-refresh fix/audit` after the frontend checks are green. Take *before* screenshots at 390 px and 1280 px (Playwright works headless; WebGL falls back to the flat colour there, which is fine). Keep `npm run check` green — tests assert behaviour and accessibility (roles, names, `aria-current`, link attributes), not class names, except `Background.test.tsx`, which checks `opacity-0/100` + `transition-opacity` and the `bg-[#232323]` body-class dance; update those if the layering changes.
+Same routes, copy, widgets and data as `fix/audit`; new presentation. lint, typecheck, 72 tests and `next build` pass. Not pushed.
 
-**What exists today:** dark `#232323` base with a three.js "silk" shader (`components/background/Silk.tsx`, tunable: `speed`, `scale`, `color`, `noiseIntensity`, `rotation`); glass cards (`bg-black/25 border border-gray-500/25 rounded-xl shadow-md p-4`); a 3-column grid at `md` inside `w-3xl`; **Home:** profile card (Minecraft avatar `pixierou.png` + GitHub/LinkedIn/resume icons + name/role/location), "andrew/README.md" about card, Last.fm card (album art + now-playing/recently-played), Monkeytype card (avg/best wpm + progress bar to 150 wpm); **Projects:** header card + three `ProjectCard`s (title, one-liner, external-link icon; optional image prop now works); pill nav top-centre with home/projects icons; bottom pill "This site owner is extremely cool."; page transitions = fade + 30 px slide via `motion` (`LayoutTransition.tsx`). System font stack (no `next/font`); icons are grey (`#9ca3af`) SVGs from svgrepo in `/public`; Tailwind 4 with no custom theme tokens (`globals.css` is 5 lines).
+**Direction:** a dark "developer desk". Glass cards over the (retuned, slightly darker) silk shader, file-viewer header bars on the README cards, monospace metadata labels, and one warm accent used sparingly: `#f4a261`, a lighter tint of the avatar's copper hair. Spotify green appears only for "now playing".
 
-**Keep:** both routes and their content, the live widgets, the avatar, the joke pill, dark theme, the silk background idea (retune freely), the per-page `metadata`.
+**What changed**
+- **Type:** Geist (UI), Geist Mono (labels, numbers), Bricolage Grotesque with its optical-size axis (names, headings), all via `next/font`.
+- **Tokens** in `globals.css` (`@theme`): `canvas`, `surface`, `line`/`line-strong`, an ink scale (`ink`, `ink-soft`, `ink-muted`, `ink-faint`), `accent`, `live`, `shadow-card`. Components use these instead of ad-hoc greys. Accent `:focus-visible` rings everywhere.
+- **Shared pieces:** `components/ui/Card.tsx` (`Card`, `CardFileBar`, `CardLabel`), `components/ui/ExternalLink.tsx`, `components/Avatar.tsx`, `components/icons.tsx` (Lucide geometry for UI glyphs, Simple Icons brand marks), `lib/cx.ts`.
+- **Layout:** nav, page and footer are in normal flow (sticky nav pill, footer pill), so nothing overlaps at short heights; content is `w-full max-w-4xl` (the `min-w-screen` off-centre bug is gone); the background is a fixed layer under an `isolate` body (the 200 ms body-class hack is gone); there's a skip link.
+- **Home:** profile card with the 16×16 sprite drawn at exactly 5× with nearest-neighbour scaling (crisp; served `unoptimized`); README card with a `#` heading; Last.fm card with fixed-size art (no layout shift), a skeleton while loading, the album art blurred behind the card as a tint, an equalizer when playing, and a link to Last.fm when the backend sends `url`; Monkeytype card with a big tabular number, an accent progress bar and a `15s` chip.
+- **Projects:** whole-card links (stretched `::after`; the focus ring outlines the card), repo slug, hover lift, and tags taken from each repo's real stack. The MC Instance Bot link is now `github.com/rredwiz/alt-manager` (the repo was renamed; the old URL redirects).
+- **New pages/files:** `app/not-found.tsx`; `app/opengraph-image.tsx` (1200×630 social card rendered at build; it fetches the two fonts from Google Fonts and falls back to the default font when offline rather than failing the build).
+- **Motion:** cards rise in with a short stagger (CSS only); 12 px page fade; the nav pill slides between routes. All of it is off or instant with `prefers-reduced-motion`.
+- **Microcopy** that changed (everything else is verbatim): "Recently Listened to on Spotify" → "Last played on Spotify", "Currently listening…" → "Now playing on Spotify", "75.5% to 150wpm" → "76% of goal … 150 wpm", nav items show "Home"/"Projects" labels, and "and things I've built" now also shows on mobile.
+- **Assets:** removed 11 files nothing referenced. Kept `timer-app-example2.png`, a real screenshot of the timer app (`ProjectCard` takes `imageSrc`/`imageAlt` if you want it on that card; it was left off to keep the three cards uniform).
 
-**Open ideas (pick what earns its place):** real typography via `next/font` (display + mono accent for the `andrew/README.md` labels) and a type scale; design tokens in `globals.css` (`@theme`) instead of ad-hoc greys; card hierarchy, hover/press states and `focus-visible` rings (none exist today); honour `prefers-reduced-motion` for page transitions too (`useReducedMotion` is already used by the background and stats card); replace `min-w-screen` with `w-full` and restructure the background layering (`isolate`); mobile polish (nav overlaps the first card at short viewports, cards stack with `mt-20`); projects: tech tags, screenshots, maybe the ready `GithubEvents` feed; `app/not-found.tsx`, `app/opengraph-image.tsx`, `loading.tsx` skeletons for the widgets; consider making the stats bar's goal and copy less "placeholder". Delete unused assets while you're there.
+**Verified:** 1280×800, 1024×560 and 390×844 on home, projects and the 404; keyboard focus (rings, card links, skip link); hover states; reduced motion (no hydration errors, bar still fills); no console errors; the OG image renders.
+
+**Open / ideas not done**
+- GitHub activity feed stays unrendered until the backend issue above is fixed (otherwise it would always be empty).
+- Possible follow-ups: project screenshots for all three cards, a "currently working on" line, a light theme, a cursor spotlight on cards.
