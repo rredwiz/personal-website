@@ -44,14 +44,12 @@ describe("RecentlyListenedCard", () => {
         render(<RecentlyListenedCard />);
 
         expect(screen.getByRole("status")).toHaveTextContent(
-            "Loading Listening History...",
+            "Loading listening history…",
         );
 
         await act(async () => {});
 
-        expect(
-            screen.getByText("Recently Listened to on Spotify"),
-        ).toBeInTheDocument();
+        expect(screen.getByText("Last played on Spotify")).toBeInTheDocument();
         expect(screen.getByText(TRACK.songname)).toBeInTheDocument();
         expect(screen.getByText("Daft Punk")).toBeInTheDocument();
         expect(screen.getByRole("img")).toHaveAttribute("src", TRACK.image);
@@ -68,9 +66,30 @@ describe("RecentlyListenedCard", () => {
         });
         render(<RecentlyListenedCard />);
         await act(async () => {});
-        expect(
-            screen.getByText("Currently listening on Spotify"),
-        ).toBeInTheDocument();
+        expect(screen.getByText("Now playing on Spotify")).toBeInTheDocument();
+    });
+
+    it("links the song to Last.fm when the backend sends a URL", async () => {
+        fetchRecentTrack.mockResolvedValue({
+            ...TRACK,
+            url: "https://www.last.fm/music/Daft+Punk/_/Harder,+Better,+Faster,+Stronger",
+        });
+        render(<RecentlyListenedCard />);
+        await act(async () => {});
+        const link = screen.getByRole("link", { name: TRACK.songname });
+        expect(link).toHaveAttribute(
+            "href",
+            "https://www.last.fm/music/Daft+Punk/_/Harder,+Better,+Faster,+Stronger",
+        );
+        expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    });
+
+    it("shows the song as plain text without a URL", async () => {
+        fetchRecentTrack.mockResolvedValue(TRACK);
+        render(<RecentlyListenedCard />);
+        await act(async () => {});
+        expect(screen.getByText(TRACK.songname)).toBeInTheDocument();
+        expect(screen.queryByRole("link")).not.toBeInTheDocument();
     });
 
     it("renders a placeholder instead of a broken image when there is no album art", async () => {

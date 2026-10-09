@@ -1,16 +1,18 @@
 "use client";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useRef } from "react";
 import FrozenRoute from "./FrozenRoute";
 
-const PAGE_TRANSITION = { duration: 0.3, ease: "easeInOut" } as const;
+const PAGE_TRANSITION = { duration: 0.28, ease: "easeInOut" } as const;
+const PAGE_OFFSET_PX = 12;
 const SCROLL_UNLOCK_DELAY_MS = 100;
 
 /**
- * Cross-fades pages on route changes. Vertical scrolling is locked while a
- * page is animating in or out so the scrollbar doesn't flash; only
- * `overflow-y` is touched so the layout's `overflow-x-hidden` stays intact.
+ * Cross-fades pages on route changes (a plain swap with reduced motion).
+ * Vertical scrolling is locked while a page is animating in or out so the
+ * scrollbar doesn't flash; only `overflow-y` is touched so the body's
+ * horizontal overflow class stays intact.
  */
 export default function LayoutTransition({
     children,
@@ -18,7 +20,9 @@ export default function LayoutTransition({
     children: ReactNode;
 }) {
     const pathname = usePathname();
+    const reducedMotion = useReducedMotion();
     const unlockTimer = useRef<number | null>(null);
+    const offset = reducedMotion ? 0 : PAGE_OFFSET_PX;
 
     const clearUnlockTimer = () => {
         if (unlockTimer.current !== null) {
@@ -57,10 +61,11 @@ export default function LayoutTransition({
         >
             <motion.div
                 key={pathname}
-                initial={{ opacity: 0, y: -30 }}
+                className="flex flex-1 flex-col"
+                initial={{ opacity: 0, y: -offset }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 30 }}
-                transition={PAGE_TRANSITION}
+                exit={{ opacity: 0, y: offset }}
+                transition={reducedMotion ? { duration: 0 } : PAGE_TRANSITION}
                 onAnimationStart={lockScroll}
                 onAnimationComplete={unlockScroll}
             >

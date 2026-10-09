@@ -1,11 +1,19 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { motion, useReducedMotion } from "motion/react";
+import type { ComponentType, SVGProps } from "react";
+import { HomeIcon, PresentationIcon } from "@/components/icons";
+import { cx } from "@/lib/cx";
 
-const LINK_CLASS =
-    "flex rounded-xl transition-colors duration-400 hover:bg-gray-500/20 p-1.5 justify-center items-center";
-const ACTIVE_CLASS = "border-b border-gray-400/90";
+const ITEMS: ReadonlyArray<{
+    href: string;
+    label: string;
+    Icon: ComponentType<SVGProps<SVGSVGElement>>;
+}> = [
+    { href: "/", label: "Home", Icon: HomeIcon },
+    { href: "/projects", label: "Projects", Icon: PresentationIcon },
+];
 
 export function isActivePath(pathname: string | null, href: string): boolean {
     if (!pathname) return false;
@@ -15,43 +23,49 @@ export function isActivePath(pathname: string | null, href: string): boolean {
 
 export default function Nav({ className }: { className?: string }) {
     const pathname = usePathname();
-    const homeActive = isActivePath(pathname, "/");
-    const projectsActive = isActivePath(pathname, "/projects");
+    const reducedMotion = useReducedMotion();
 
     return (
         <nav className={className} aria-label="Primary">
-            <div className="grid rounded-xl bg-black/25 border-gray-500/25 border-1 grid-cols-2">
-                <Link
-                    className={LINK_CLASS}
-                    href="/"
-                    aria-current={homeActive ? "page" : undefined}
-                >
-                    <div className={homeActive ? ACTIVE_CLASS : ""}>
-                        <Image
-                            src="/home-icon.svg"
-                            width={24}
-                            height={24}
-                            alt="Home"
-                        />
-                    </div>
-                </Link>
-                <Link
-                    className={LINK_CLASS}
-                    href="/projects"
-                    aria-current={projectsActive ? "page" : undefined}
-                >
-                    <div
-                        className={`${projectsActive ? ACTIVE_CLASS : ""} w-6 h-6 flex justify-center items-center`}
-                    >
-                        <Image
-                            src="/project-icon.svg"
-                            width={16}
-                            height={16}
-                            alt="Projects"
-                        />
-                    </div>
-                </Link>
-            </div>
+            <ul className="flex items-center gap-1 rounded-full border border-line bg-surface p-1 shadow-card backdrop-blur-md">
+                {ITEMS.map(({ href, label, Icon }) => {
+                    const active = isActivePath(pathname, href);
+                    return (
+                        <li key={href} className="relative">
+                            {active && (
+                                // Slides between items when the route changes.
+                                <motion.span
+                                    layoutId="nav-active-pill"
+                                    aria-hidden="true"
+                                    className="absolute inset-0 rounded-full bg-white/10 ring-1 ring-white/10 ring-inset"
+                                    transition={
+                                        reducedMotion
+                                            ? { duration: 0 }
+                                            : {
+                                                  type: "spring",
+                                                  bounce: 0.2,
+                                                  duration: 0.45,
+                                              }
+                                    }
+                                />
+                            )}
+                            <Link
+                                href={href}
+                                aria-current={active ? "page" : undefined}
+                                className={cx(
+                                    "relative flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors duration-200",
+                                    active
+                                        ? "text-ink"
+                                        : "text-ink-muted hover:text-ink",
+                                )}
+                            >
+                                <Icon className="size-4" />
+                                {label}
+                            </Link>
+                        </li>
+                    );
+                })}
+            </ul>
         </nav>
     );
 }

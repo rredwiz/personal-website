@@ -10,6 +10,7 @@ afterEach(() => {
 type MockImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> & {
     src: string | { src: string };
     priority?: boolean;
+    preload?: boolean;
     fill?: boolean;
     unoptimized?: boolean;
 };
@@ -19,6 +20,7 @@ vi.mock("next/image", () => ({
     default: ({ src, alt, ...rest }: MockImageProps) => {
         // Next-only props would be meaningless (and warn) on a DOM element.
         delete rest.priority;
+        delete rest.preload;
         delete rest.fill;
         delete rest.unoptimized;
         return (

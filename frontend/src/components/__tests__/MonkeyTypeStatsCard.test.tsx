@@ -62,7 +62,8 @@ describe("MonkeyTypeStatsCard", () => {
 
         expect(screen.getByText("120")).toBeInTheDocument();
         expect(screen.getByText("151.2")).toBeInTheDocument();
-        expect(screen.getByText("80.0% to 150wpm")).toBeInTheDocument();
+        expect(screen.getByText("80% of goal")).toBeInTheDocument();
+        expect(screen.getByText("150 wpm")).toBeInTheDocument();
         expect(screen.getByRole("progressbar")).toHaveAttribute(
             "aria-valuenow",
             "80",

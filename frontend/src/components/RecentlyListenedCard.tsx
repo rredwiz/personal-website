@@ -2,17 +2,41 @@
 import { useCallback, useState } from "react";
 import { usePolling } from "@/hooks/usePolling";
 import { fetchRecentTrack, isNowPlaying } from "@/lib/api";
+import { cx } from "@/lib/cx";
 import type { RecentTrack } from "@/types";
+import { Card, CardLabel } from "@/components/ui/Card";
+import ExternalLink from "@/components/ui/ExternalLink";
+import { SpotifyIcon } from "@/components/icons";
 
 /** How often to ask the backend for the current track while the tab is visible. */
 export const POLL_INTERVAL_MS = 30_000;
 
 type Status = "loading" | "ready" | "error";
 
-const CARD_CLASS =
-    "p-4 col-span-2 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25";
+const CARD_CLASS = "isolate flex items-center gap-4 overflow-hidden sm:gap-5";
+/** Fixed size so the row never jumps when the artwork arrives. */
+const ART_CLASS = "size-20 shrink-0 rounded-lg sm:size-24 md:size-32";
 
-export default function RecentlyListenedCard() {
+/** Three bouncing bars; static (and still meaningful) with reduced motion. */
+function Equalizer() {
+    return (
+        <span aria-hidden="true" className="flex h-3 items-end gap-[2px]">
+            {[0, 0.25, 0.5].map((delay) => (
+                <span
+                    key={delay}
+                    className="h-full w-[3px] origin-bottom animate-equalize rounded-full bg-live"
+                    style={{ animationDelay: `-${delay}s` }}
+                />
+            ))}
+        </span>
+    );
+}
+
+export default function RecentlyListenedCard({
+    className,
+}: {
+    className?: string;
+}) {
     const [track, setTrack] = useState<RecentTrack | null>(null);
     const [status, setStatus] = useState<Status>("loading");
 
@@ -33,52 +57,111 @@ export default function RecentlyListenedCard() {
 
     usePolling(refresh, POLL_INTERVAL_MS);
 
+    if (!track && status === "error") {
+        return (
+            <Card className={cx(CARD_CLASS, className)}>
+                <div
+                    className={cx(
+                        ART_CLASS,
+                        "flex items-center justify-center bg-white/[0.04]",
+                    )}
+                    aria-hidden="true"
+                >
+                    <SpotifyIcon className="size-7 text-ink-faint/50" />
+                </div>
+                <div className="min-w-0">
+                    <CardLabel>last.fm</CardLabel>
+                    <p role="status" className="mt-2 text-ink-muted">
+                        Listening history unavailable.
+                    </p>
+                </div>
+            </Card>
+        );
+    }
+
     if (!track) {
         return (
-            <div className={CARD_CLASS}>
-                <p className="text-gray-400 h-25" role="status">
-                    {status === "error"
-                        ? "Listening history unavailable."
-                        : "Loading Listening History..."}
+            <Card className={cx(CARD_CLASS, className)}>
+                <div
+                    className={cx(ART_CLASS, "animate-pulse bg-white/[0.06]")}
+                    aria-hidden="true"
+                />
+                <div className="flex-1 space-y-2.5" aria-hidden="true">
+                    <div className="h-3 w-36 animate-pulse rounded bg-white/[0.06]" />
+                    <div className="h-5 w-52 max-w-full animate-pulse rounded bg-white/[0.08]" />
+                    <div className="h-4 w-28 animate-pulse rounded bg-white/[0.06]" />
+                </div>
+                <p role="status" className="sr-only">
+                    Loading listening history…
                 </p>
-            </div>
+            </Card>
         );
     }
 
     const nowPlaying = isNowPlaying(track);
 
     return (
-        <div className={CARD_CLASS}>
-            <div className="flex gap-4">
-                {track.image ? (
-                    // Plain <img>: Last.fm's CDN host can change, and next/image
-                    // throws at runtime for hosts missing from next.config.
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                        src={track.image}
-                        className="opacity-90 w-25 rounded-md"
-                        width={100}
-                        height={100}
-                        alt={`Album art for ${track.songname} by ${track.artist}`}
-                        loading="lazy"
-                        decoding="async"
-                    />
-                ) : (
-                    <div
-                        className="w-25 h-25 shrink-0 rounded-md bg-white/5"
-                        aria-hidden="true"
-                    />
-                )}
-                <div className="flex w-[100%] min-h-25 justify-center flex-col">
-                    <h2 className="text-sm">
-                        {nowPlaying
-                            ? "Currently listening on Spotify"
-                            : "Recently Listened to on Spotify"}
-                    </h2>
-                    <p className="text-lg">{track.songname}</p>
-                    <p className="text-gray-400">{track.artist}</p>
-                </div>
+        <Card className={cx(CARD_CLASS, className)}>
+            {track.image && (
+                // The artwork, blurred way out, tints the card with the album's colours.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                    src={track.image}
+                    alt=""
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 -z-10 size-full scale-150 object-cover opacity-25 blur-3xl saturate-150"
+                />
+            )}
+            {track.image ? (
+                // Plain <img>: Last.fm's CDN host can change, and next/image
+                // throws at runtime for hosts missing from next.config.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                    src={track.image}
+                    className={cx(
+                        ART_CLASS,
+                        "object-cover shadow-lg ring-1 ring-white/10",
+                    )}
+                    width={96}
+                    height={96}
+                    alt={`Album art for ${track.songname} by ${track.artist}`}
+                    loading="lazy"
+                    decoding="async"
+                />
+            ) : (
+                <div
+                    className={cx(ART_CLASS, "bg-white/[0.04]")}
+                    aria-hidden="true"
+                />
+            )}
+            <div className="min-w-0 flex-1">
+                <CardLabel className={cx(nowPlaying && "text-live")}>
+                    {nowPlaying ? (
+                        <Equalizer />
+                    ) : (
+                        <span
+                            aria-hidden="true"
+                            className="size-1.5 rounded-full bg-ink-faint"
+                        />
+                    )}
+                    {nowPlaying
+                        ? "Now playing on Spotify"
+                        : "Last played on Spotify"}
+                </CardLabel>
+                <p className="mt-2 line-clamp-2 font-display text-xl leading-tight font-semibold tracking-tight md:text-2xl">
+                    {track.url ? (
+                        <ExternalLink
+                            href={track.url}
+                            className="transition-colors duration-200 hover:text-accent"
+                        >
+                            {track.songname}
+                        </ExternalLink>
+                    ) : (
+                        track.songname
+                    )}
+                </p>
+                <p className="mt-1 truncate text-ink-muted">{track.artist}</p>
             </div>
-        </div>
+        </Card>
     );
 }

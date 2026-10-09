@@ -2,6 +2,9 @@
 import { useEffect, useState } from "react";
 import { animate, motion, useReducedMotion } from "motion/react";
 import type { TypingScore } from "@/types";
+import { cx } from "@/lib/cx";
+import { Card } from "@/components/ui/Card";
+import ExternalLink from "@/components/ui/ExternalLink";
 import MonkeyTypeLogo from "./MonkeyTypeLogo";
 
 /** The progress bar measures the average against this goal. */
@@ -14,8 +17,10 @@ export function goalPercentage(averagewpm: number): number {
 
 export default function MonkeyTypeStatsCard({
     stats,
+    className,
 }: {
     stats: TypingScore | null;
+    className?: string;
 }) {
     const reducedMotion = useReducedMotion();
     const target = goalPercentage(stats?.averagewpm ?? 0);
@@ -35,26 +40,35 @@ export default function MonkeyTypeStatsCard({
     }, [target, reducedMotion]);
 
     return (
-        <div className="flex flex-col gap-2 justify-center items-center p-4 col-span-1 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
-            <div className="gap-3 flex justify-center items-center">
-                <MonkeyTypeLogo width={50} height={50} />
-                <div className="w-[1px] h-15 bg-gray-500"></div>
-                <div className="flex flex-col">
-                    <p className="text-lg font-semibold">
-                        {stats ? stats.averagewpm : "—"}
-                        <span className="font-medium"> wpm</span>
-                        <span className="text-sm"> avg</span>
-                    </p>
-                    <p className="text-gray-400 font-semibold">
-                        {stats ? stats.bestwpm : "—"}
-                        <span className="text-sm font-medium"> wpm</span>
-                        <span className="text-xs"> best</span>
-                    </p>
-                </div>
+        <Card className={cx("flex flex-col", className)}>
+            <div className="flex items-center justify-between gap-2">
+                <ExternalLink
+                    href="https://monkeytype.com/profile/redwiz"
+                    aria-label="Monkeytype profile (opens in a new tab)"
+                    className="group flex items-center gap-2 font-mono text-xs text-ink-faint transition-colors duration-200 hover:text-ink"
+                >
+                    <MonkeyTypeLogo className="size-5 transition-colors duration-200 group-hover:text-accent" />
+                    monkeytype
+                </ExternalLink>
+                <span className="rounded-md border border-line px-1.5 py-0.5 font-mono text-[10px] text-ink-faint">
+                    15s
+                </span>
             </div>
-            <div className="relative w-[90%]">
+            <p className="mt-4 flex items-baseline gap-2">
+                <span className="font-mono text-4xl font-semibold tracking-tight text-ink tabular-nums">
+                    {stats ? stats.averagewpm : "—"}
+                </span>
+                <span className="text-sm text-ink-muted">wpm avg</span>
+            </p>
+            <p className="mt-1 text-sm text-ink-faint">
+                <span className="font-mono text-ink-soft tabular-nums">
+                    {stats ? stats.bestwpm : "—"}
+                </span>{" "}
+                wpm best
+            </p>
+            <div className="mt-auto pt-5">
                 <div
-                    className="relative h-5 bg-gray-700/50 border-1 border-gray-500 rounded-3xl overflow-hidden"
+                    className="h-1.5 overflow-hidden rounded-full bg-white/[0.08]"
                     role="progressbar"
                     aria-label={`Progress towards ${WPM_GOAL} wpm`}
                     aria-valuemin={0}
@@ -69,15 +83,18 @@ export default function MonkeyTypeStatsCard({
                                 ? { duration: 0 }
                                 : { duration: 0.5, ease: "easeOut" }
                         }
-                        className="absolute h-full bg-gray-400 rounded-3xl"
+                        className="h-full rounded-full bg-linear-to-r from-accent/60 to-accent"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center text-sm font-medium text-white">
-                        {stats
-                            ? `${progress.toFixed(1)}% to ${WPM_GOAL}wpm`
-                            : "typing stats unavailable"}
-                    </div>
                 </div>
+                <p className="mt-2 flex justify-between gap-2 font-mono text-[11px] text-ink-faint">
+                    <span>
+                        {stats
+                            ? `${Math.round(progress)}% of goal`
+                            : "typing stats unavailable"}
+                    </span>
+                    <span>{WPM_GOAL} wpm</span>
+                </p>
             </div>
-        </div>
+        </Card>
     );
 }

@@ -4,6 +4,7 @@ import Background from "@/components/background/Background";
 
 const supportsWebGL = vi.hoisted(() => vi.fn<() => boolean>());
 const silkMode = vi.hoisted(() => ({ throwOnRender: false }));
+const reducedMotion = vi.hoisted(() => ({ value: false }));
 
 vi.mock("@/lib/webgl", () => ({ supportsWebGL }));
 vi.mock("@/components/background/Silk", () => ({
@@ -18,42 +19,55 @@ vi.mock("@/components/background/Silk", () => ({
         );
     },
 }));
-vi.mock("motion/react", () => ({ useReducedMotion: () => false }));
+vi.mock("motion/react", () => ({
+    useReducedMotion: () => reducedMotion.value,
+}));
 
 describe("Background", () => {
     beforeEach(() => {
         vi.useFakeTimers();
         silkMode.throwOnRender = false;
-        document.body.className = "bg-[#232323]";
+        reducedMotion.value = false;
     });
 
     afterEach(() => {
         vi.useRealTimers();
     });
 
-    it("renders the shader when WebGL is available and fades it in after first paint", async () => {
+    it("is a fixed layer behind the page that fades the shader in after first paint", async () => {
         supportsWebGL.mockReturnValue(true);
         const { container } = render(<Background />);
+        const layer = container.firstChild;
 
         await act(async () => {});
         // First paint: flat colour only, nothing mounted yet.
         expect(screen.queryByTestId("silk")).not.toBeInTheDocument();
-        expect(container.firstChild).toHaveClass("opacity-0");
-        expect(document.body.classList.contains("bg-[#232323]")).toBe(true);
+        expect(layer).toHaveClass("fixed", "-z-10", "opacity-0");
+        expect(layer).toHaveAttribute("aria-hidden", "true");
 
         await act(async () => {
             vi.advanceTimersByTime(250);
         });
-        expect(screen.getByTestId("silk")).toHaveAttribute("data-speed", "5");
+        expect(screen.getByTestId("silk")).toHaveAttribute("data-speed", "4");
         expect(screen.getByTestId("silk")).toHaveAttribute(
             "data-frameloop",
             "always",
         );
-        expect(container.firstChild).toHaveClass(
-            "opacity-100",
-            "transition-opacity",
+        expect(layer).toHaveClass("opacity-100", "transition-opacity");
+    });
+
+    it("holds the shader still for reduced motion", async () => {
+        supportsWebGL.mockReturnValue(true);
+        reducedMotion.value = true;
+        render(<Background />);
+        await act(async () => {
+            vi.advanceTimersByTime(250);
+        });
+        expect(screen.getByTestId("silk")).toHaveAttribute("data-speed", "0");
+        expect(screen.getByTestId("silk")).toHaveAttribute(
+            "data-frameloop",
+            "demand",
         );
-        expect(document.body.classList.contains("bg-[#232323]")).toBe(false);
     });
 
     it("skips the shader entirely without WebGL", async () => {
@@ -89,7 +103,7 @@ describe("Background", () => {
         act(() => {
             vi.advanceTimersByTime(250);
         });
-        // Body class is untouched because the timer never fired.
-        expect(document.body.classList.contains("bg-[#232323]")).toBe(true);
+        // The timer is what probes for WebGL, so it never fired.
+        expect(supportsWebGL).not.toHaveBeenCalled();
     });
 });

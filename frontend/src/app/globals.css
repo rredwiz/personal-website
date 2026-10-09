@@ -1,5 +1,118 @@
 @import "tailwindcss";
 
-html {
-    color-scheme: dark;
+/*
+ * Font families come from next/font (see layout.tsx), which defines the
+ * --font-geist / --font-geist-mono / --font-bricolage variables on <html>.
+ * `inline` makes the utilities reference those variables directly.
+ */
+@theme inline {
+    --font-sans:
+        var(--font-geist), ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-mono:
+        var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+    --font-display:
+        var(--font-bricolage), var(--font-geist), ui-sans-serif, system-ui,
+        sans-serif;
+}
+
+@theme {
+    /* Page and card surfaces. Keep --color-canvas in sync with BASE_COLOR in lib/theme.ts. */
+    --color-canvas: #0f0f11;
+    --color-surface: rgb(17 17 20 / 0.72);
+    --color-line: rgb(255 255 255 / 0.08);
+    --color-line-strong: rgb(255 255 255 / 0.18);
+
+    /* Text, from most to least prominent. */
+    --color-ink: #ededf0;
+    --color-ink-soft: #c9c9d1;
+    --color-ink-muted: #a6a6b0;
+    --color-ink-faint: #85858f;
+
+    /* Accent: a lighter tint of the avatar's copper hair. Used sparingly. */
+    --color-accent: #f4a261;
+
+    /* Spotify green, only for the "now playing" indicator. */
+    --color-live: #1ed760;
+
+    --shadow-card:
+        inset 0 1px 0 0 rgb(255 255 255 / 0.04), 0 1px 2px rgb(0 0 0 / 0.35),
+        0 16px 40px -20px rgb(0 0 0 / 0.75);
+
+    --animate-equalize: equalize 0.9s ease-in-out infinite;
+
+    @keyframes equalize {
+        0%,
+        100% {
+            transform: scaleY(0.35);
+        }
+        50% {
+            transform: scaleY(1);
+        }
+    }
+
+    @keyframes rise {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+}
+
+@layer base {
+    html {
+        color-scheme: dark;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    ::selection {
+        background-color: var(--color-accent);
+        color: var(--color-canvas);
+    }
+
+    /*
+     * The colour is set at rest so `transition-colors` elements don't fade
+     * their focus ring in from the text colour.
+     */
+    * {
+        outline-color: var(--color-accent);
+    }
+
+    :focus-visible {
+        outline-width: 2px;
+        outline-style: solid;
+        outline-offset: 3px;
+    }
+}
+
+/* Cards rise in one after another; skipped entirely for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+    .rise-in > * {
+        animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .rise-in > :nth-child(2) {
+        animation-delay: 60ms;
+    }
+    .rise-in > :nth-child(3) {
+        animation-delay: 120ms;
+    }
+    .rise-in > :nth-child(4) {
+        animation-delay: 180ms;
+    }
+    .rise-in > :nth-child(n + 5) {
+        animation-delay: 240ms;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Avatar from "@/components/Avatar";
 import ProjectCard from "@/components/ProjectCard";
+import { Card, CardFileBar } from "@/components/ui/Card";
+import ExternalLink from "@/components/ui/ExternalLink";
+import { BookOpenIcon } from "@/components/icons";
 // GitHub activity feed: backend route + component are ready, just not shown yet.
 // import GithubEvents from "@/components/GithubEvents";
 // import { getGithubEvents } from "@/lib/api";
@@ -14,17 +17,20 @@ const PROJECTS = [
     {
         header: "MC Instance Bot", // keep headers short so they fit the card
         desc: "Enabled a Discord bot to create and manage Minecraft instances.",
-        url: "https://github.com/rredwiz/alt_manager",
+        url: "https://github.com/rredwiz/alt-manager",
+        tags: ["Node.js", "discord.js", "Mineflayer"],
     },
     {
         header: "Syllabuddy AI",
         desc: "Implemented a syllabus decoder to parse important details.",
         url: "https://github.com/qZheng/syllabus-decoder",
+        tags: ["Next.js", "Flask", "OpenAI"],
     },
     {
         header: "Desktop Timer App",
         desc: "An Electron desktop timer app made for myself and friends.",
         url: "https://github.com/rredwiz/timer-app",
+        tags: ["Electron", "TypeScript"],
     },
 ] as const;
 
@@ -32,62 +38,47 @@ export default function ProjectsPage() {
     // const githubEvents = await getGithubEvents();
 
     return (
-        <main>
-            <div className="flex justify-center items-center min-h-screen min-w-screen">
-                <div className="flex relative m-8 mt-20 mb-20 md:mt-0 md:mb-8 flex-col md:grid md:grid-cols-3 gap-4 w-3xl">
-                    <div className="flex p-4 col-span-3 bg-black/25 h-auto rounded-xl shadow-md border border-gray-500/25">
-                        <div className="flex justify-center items-center gap-4">
-                            <div className="flex flex-col gap-2">
-                                <p className="text-xs text-white font-mono">
-                                    <a
-                                        href="https://github.com/rredwiz"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        projects
-                                        <span className="text-gray-400">/</span>
-                                        README
-                                        <span className="text-gray-400">
-                                            .md
-                                        </span>
-                                    </a>
-                                </p>
-                                <Image
-                                    src="/pixierou.png"
-                                    className="h-auto w-auto mb-2 md:w-20"
-                                    width={153}
-                                    height={153}
-                                    alt="Andrew's Minecraft character"
-                                    priority
-                                />
-                            </div>
-                            <div>
-                                <h1 className="font-semibold text-lg md:text-2xl">
-                                    Personal projects{" "}
-                                    <span className="hidden md:inline">
-                                        and things I&apos;ve built
-                                    </span>
-                                </h1>
-                                <p className="text-gray-400">
-                                    They can each be found on my own github{" "}
-                                    <a
-                                        className="text-gray-300 border-b border-gray-300/70 transition-colors duration-200 ease-in-out hover:text-white hover:border-white"
-                                        href="https://github.com/rredwiz"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        here
-                                    </a>
-                                    —more to come in the future.
-                                </p>
-                            </div>
+        <main
+            id="content"
+            className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6"
+        >
+            <div className="rise-in grid w-full max-w-4xl gap-4 md:grid-cols-3">
+                <Card as="section" className="md:col-span-3">
+                    <CardFileBar icon={<BookOpenIcon className="size-3.5" />}>
+                        <ExternalLink
+                            href="https://github.com/rredwiz"
+                            className="transition-colors hover:text-ink"
+                        >
+                            projects<span className="text-ink-faint/60">/</span>
+                            <span className="text-ink-soft">README</span>.md
+                        </ExternalLink>
+                    </CardFileBar>
+                    <div className="flex items-center gap-4 sm:gap-6">
+                        <Avatar scale={4} preload />
+                        <div className="min-w-0">
+                            <h1 className="font-display text-2xl leading-tight font-semibold tracking-tight sm:text-3xl">
+                                Personal projects{" "}
+                                <span className="text-ink-muted">
+                                    and things I&apos;ve built
+                                </span>
+                            </h1>
+                            <p className="mt-2 text-ink-muted">
+                                They can each be found on my own github{" "}
+                                <ExternalLink
+                                    inline
+                                    href="https://github.com/rredwiz"
+                                >
+                                    here
+                                </ExternalLink>
+                                —more to come in the future.
+                            </p>
                         </div>
                     </div>
-                    {/* <GithubEvents events={githubEvents.events} /> */}
-                    {PROJECTS.map((project) => (
-                        <ProjectCard key={project.url} {...project} />
-                    ))}
-                </div>
+                </Card>
+                {/* <GithubEvents events={githubEvents.events} /> */}
+                {PROJECTS.map((project) => (
+                    <ProjectCard key={project.url} {...project} />
+                ))}
             </div>
         </main>
     );

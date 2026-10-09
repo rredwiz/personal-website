@@ -3,7 +3,8 @@ import { Component, ReactNode, useEffect, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import Silk from "./Silk";
 import { supportsWebGL } from "@/lib/webgl";
-import { BASE_COLOR } from "@/lib/theme";
+import { SILK_COLOR } from "@/lib/theme";
+import { cx } from "@/lib/cx";
 
 /** Delay before fading the shader in, so the first paint is the flat base colour. */
 const FADE_IN_DELAY_MS = 200;
@@ -34,20 +35,20 @@ class SilkErrorBoundary extends Component<
     }
 }
 
-export default function Background({ children }: { children?: ReactNode }) {
+/**
+ * Fixed, viewport-sized layer behind the page. <body> is `isolate`, so this
+ * negative z-index layer paints above the body's own background without any
+ * class juggling.
+ */
+export default function Background() {
     const [isVisible, setIsVisible] = useState(false);
-    const [transitionEnabled, setTransitionEnabled] = useState(false);
     const [canRenderSilk, setCanRenderSilk] = useState(false);
     const reducedMotion = useReducedMotion();
 
     useEffect(() => {
-        // Wait for the first paint before mounting the shader and enabling the
-        // opacity transition, so the canvas fades in rather than flashing.
+        // Mount the shader after the first paint, then fade it in.
         const timer = window.setTimeout(() => {
-            // The <body> background would otherwise paint over this z-[-1] layer.
-            document.body.classList.remove("bg-[#232323]");
             setCanRenderSilk(supportsWebGL());
-            setTransitionEnabled(true);
             setIsVisible(true);
         }, FADE_IN_DELAY_MS);
         return () => window.clearTimeout(timer);
@@ -55,24 +56,27 @@ export default function Background({ children }: { children?: ReactNode }) {
 
     return (
         <div
-            className={`${isVisible ? "opacity-100" : "opacity-0"} ${
-                transitionEnabled ? "transition-opacity" : "transition-none"
-            } min-w-screen absolute inset-0 z-[-1] duration-2000 ease-in-out`}
             aria-hidden="true"
+            className={cx(
+                "pointer-events-none fixed inset-0 -z-10 transition-opacity duration-[1600ms] ease-out",
+                isVisible ? "opacity-100" : "opacity-0",
+            )}
         >
-            {children}
             {canRenderSilk && (
                 <SilkErrorBoundary>
                     <Silk
-                        speed={reducedMotion ? 0 : 5}
+                        speed={reducedMotion ? 0 : 4}
                         frameloop={reducedMotion ? "demand" : "always"}
                         scale={0.6}
-                        color={BASE_COLOR}
-                        noiseIntensity={0.1}
+                        color={SILK_COLOR}
+                        noiseIntensity={0.12}
                         rotation={2.18}
                     />
                 </SilkErrorBoundary>
             )}
+            {/* Warm glow behind the nav, and a vignette that pulls focus to the centre. */}
+            <div className="absolute inset-0 bg-[radial-gradient(60%_45%_at_50%_0%,rgb(244_162_97/0.07),transparent_70%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(130%_90%_at_50%_35%,transparent_45%,rgb(0_0_0/0.6))]" />
         </div>
     );
 }
