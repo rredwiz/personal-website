@@ -20,7 +20,7 @@ export default function NotFound() {
                             <span className="text-ink-soft">404</span>.md
                         </span>
                     </CardFileBar>
-                    <Avatar scale={5} className="mx-auto mt-2" />
+                    <Avatar scale={5} preload className="mx-auto mt-2" />
                     <p className="mt-5 font-mono text-sm text-accent">404</p>
                     <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight">
                         Nothing here.
