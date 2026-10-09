@@ -13,8 +13,15 @@ export type RecentTrack = {
      * Python string `"True"`, so both shapes are accepted (see `isNowPlaying`).
      */
     currentlylistening: boolean | string;
-    /** Link to the track on Last.fm (not sent by older backend builds). */
+    /**
+     * Link to the track: on Spotify when `source` is "spotify", on Last.fm when
+     * it is "lastfm" (older backend builds send neither). See `songLink`.
+     */
     url?: string;
+    /** ISO 8601 time it was played; absent while it's playing or from older backends. */
+    playedAt?: string;
+    /** Which service the backend got it from (absent from older backends). */
+    source?: "spotify" | "lastfm";
 };
 
 export type GithubCommitEvent = {

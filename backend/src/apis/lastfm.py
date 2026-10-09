@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
+from datetime import datetime, timezone
 from typing import Any, Optional
 
 from src.cache import TTLCache
@@ -61,6 +62,19 @@ def _pick_image_url(images: Any) -> str:
     return next(reversed(by_size.values()), "") if by_size else ""
 
 
+def _played_at(track: dict) -> Optional[str]:
+    """ISO 8601 (UTC) scrobble time; Last.fm sends none for the now-playing track."""
+    date = track.get("date")
+    uts = date.get("uts") if isinstance(date, dict) else None
+    try:
+        seconds = int(uts)
+    except (TypeError, ValueError):
+        return None
+    if seconds <= 0:
+        return None
+    return datetime.fromtimestamp(seconds, tz=timezone.utc).isoformat().replace("+00:00", "Z")
+
+
 def create_lastfm_json(response_json: Any) -> Optional[dict]:
     """Shape a ``user.getrecenttracks`` response into what the frontend needs.
 
@@ -93,4 +107,6 @@ def create_lastfm_json(response_json: Any) -> Optional[dict]:
         "artist": artist_name,
         "image": _pick_image_url(track.get("image")),
         "url": str(track.get("url") or ""),
+        "played_at": None if now_playing else _played_at(track),
+        "source": "lastfm",
     }

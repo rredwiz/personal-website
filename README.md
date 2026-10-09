@@ -17,7 +17,7 @@ cp .env.example .env                                 # then fill in the API keys
 flask --app src.app run                              # http://127.0.0.1:5000
 ```
 
-Routes: `GET /` (health check), `GET /lastfm`, `GET /monkeytype`, `GET /github`.
+Routes: `GET /` (health check), `GET /nowplaying` (Spotify if configured, else Last.fm), `GET /lastfm`, `GET /monkeytype`, `GET /github`.
 Each answers JSON, or a JSON `{"error": ...}` with HTTP 502 when the upstream service is unavailable.
 Responses are cached in memory (Last.fm 15 s, GitHub 5 min, Monkeytype 1 h) so visitors don't translate 1:1 into upstream API calls.
 
@@ -54,7 +54,8 @@ pytest
 
 | Where | Variable | Purpose |
 | --- | --- | --- |
-| backend | `LASTFM_API_KEY`, `LASTFM_USERNAME` | Last.fm recent tracks |
+| backend | `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_REFRESH_TOKEN` | Optional. Now playing / last played straight from Spotify, with a direct link to the track. Get the refresh token with `python scripts/spotify_auth.py` (instructions at the top of that file); it expires every six months. |
+| backend | `LASTFM_API_KEY`, `LASTFM_USERNAME` | Last.fm recent tracks (the fallback for `/nowplaying`) |
 | backend | `APE_KEY` | Monkeytype ApeKey (results + personal bests) |
 | backend | `GITHUB_API_KEY`, `GITHUB_USERNAME` | GitHub public events (token optional, raises the rate limit) |
 | backend | `CORS_ORIGINS` | `*` (default) or a comma-separated allow-list of origins |

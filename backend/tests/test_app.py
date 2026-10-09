@@ -40,6 +40,16 @@ class RouteTests(unittest.TestCase):
     def test_lastfm_failure(self, _loader):
         self.assertEqual(self.client.get("/lastfm").status_code, 502)
 
+    @patch("src.app.nowplaying.get_now_playing", return_value={"songname": "x", "source": "spotify"})
+    def test_nowplaying_ok(self, _loader):
+        response = self.client.get("/nowplaying")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json()["source"], "spotify")
+
+    @patch("src.app.nowplaying.get_now_playing", return_value=None)
+    def test_nowplaying_failure(self, _loader):
+        self.assertEqual(self.client.get("/nowplaying").status_code, 502)
+
     @patch("src.app.github.get_github_events", return_value={"events": [{"message": "m"}]})
     def test_github_ok(self, _loader):
         response = self.client.get("/github")

@@ -23,6 +23,29 @@ _Written 2026-10-09 by the agent that did the audit; updated the same day by the
 - **`next-env.d.ts` is no longer tracked:** Next 16 writes it differently for `next dev` (`.next/dev/types/...`) and `next build` (`.next/types/...`), so it flipped in every working tree. It's gitignored, as create-next-app does, and `npm run typecheck` is now `next typegen && tsc --noEmit`, which regenerates it plus the route types (including Next's route validator). Tested from a clean checkout.
 - **npm gotcha:** npm 10.9.8 crashes (`Cannot read properties of null (reading 'edgesOut')` in Arborist `#loadPeerSet`) when *adding or upgrading* vitest 4 in this tree. If that happens, run the install with `npx npm@11 install ...`; the resulting lockfile (v3) works with npm 10's `npm ci`, which was verified.
 
+## Now playing: why it froze, and the Spotify option (2026-10-09)
+
+**Why the card stopped changing:** the backend was fine. It returns Last.fm's latest scrobble, and Last.fm hasn't received one since **24 Jul 2026, 02:06** ("Eyes Wide Shut" by Fineart; the profile shows no listening in the last 7 days). On 18 Jun 2026 Spotify announced that refresh tokens expire six months after the original authorization (refreshing doesn't extend them), effective for existing apps on **20 Jul 2026**. Last.fm's "Spotify Scrobbling" link is such an authorization, and the scrobbles stop four days after that date. **Fix (Andrew):** on last.fm → Settings → Applications, disconnect Spotify Scrobbling and connect it again, then play a new song. Expect to redo it every six months.
+
+**What changed in code**
+- `GET /nowplaying` (new): Spotify when `SPOTIFY_CLIENT_ID`/`SECRET`/`REFRESH_TOKEN` are set and Spotify answers; otherwise Last.fm. The response shape is the same either way, plus `played_at` (ISO time; `null` while playing) and `source` (`spotify`/`lastfm`). `GET /lastfm` stays for already-deployed frontends.
+- `src/apis/spotify.py` is real now: currently-playing first, then recently-played; a 20 s cache (dev-mode apps share one quota); `invalid_grant` logs a "run scripts/spotify_auth.py" error and backs off 15 min instead of retrying.
+- `backend/scripts/spotify_auth.py`: one-time Authorization Code flow on `http://127.0.0.1:8888/callback` that prints the refresh token and its approximate expiry.
+- Frontend: `fetchRecentTrack` calls `/nowplaying` and falls back to `/lastfm` on a 404 (old backend), so Vercel and Render can deploy in either order. `songLink()` gives the direct Spotify track URL when Spotify supplied the data, and a Spotify search URL otherwise.
+
+**Spotify vs Last.fm**
+
+| | Spotify Web API | Last.fm |
+| --- | --- | --- |
+| Link to the song | Direct track URL (`open.spotify.com/track/...`) | Last.fm page, or a Spotify *search* link |
+| Freshness | Real time, including pause state | After the scrobble posts; "now playing" usually works |
+| Setup | Developer app + one-time OAuth (`scripts/spotify_auth.py`) | API key only |
+| Ongoing upkeep | Re-authorize every 6 months (Spotify's 2026 rule) | Reconnect Spotify Scrobbling every 6 months (same rule, but it fails silently) |
+| Requirements | App owner needs Spotify **Premium** (Development Mode, Feb 2026) | None |
+| Sources | Spotify only | Anything that scrobbles |
+
+Recommendation: set up Spotify (direct links, real time, and a loud log line when it lapses) and keep Last.fm as the automatic fallback. Steps are at the top of `backend/scripts/spotify_auth.py`; the README's env table lists the variables.
+
 ## How to run the checks
 
 ```bash

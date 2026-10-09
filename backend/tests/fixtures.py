@@ -26,6 +26,36 @@ def lastfm_response(tracks):
     return {"recenttracks": {"track": tracks, "@attr": {"user": "redwheeze", "total": "12345"}}}
 
 
+SPOTIFY_IMAGES = [
+    {"url": "https://i.scdn.co/image/640", "width": 640, "height": 640},
+    {"url": "https://i.scdn.co/image/300", "width": 300, "height": 300},
+    {"url": "https://i.scdn.co/image/64", "width": 64, "height": 64},
+]
+
+
+def spotify_track(name="Harder, Better, Faster, Stronger", artists=("Daft Punk",), images=None):
+    return {
+        "id": "5W3cjX2J3tjhG8zb6u0qHn",
+        "name": name,
+        "artists": [{"name": artist} for artist in artists],
+        "album": {"images": SPOTIFY_IMAGES if images is None else images},
+        "external_urls": {"spotify": "https://open.spotify.com/track/5W3cjX2J3tjhG8zb6u0qHn"},
+    }
+
+
+def spotify_currently_playing(track=None, is_playing=True, kind="track", timestamp=1700000000000):
+    return {
+        "is_playing": is_playing,
+        "timestamp": timestamp,
+        "currently_playing_type": kind,
+        "item": spotify_track() if track is None else track,
+    }
+
+
+def spotify_recently_played(track=None, played_at="2026-10-08T21:15:04.512Z"):
+    return {"items": [{"track": spotify_track() if track is None else track, "played_at": played_at}]}
+
+
 def monkeytype_result(wpm, language="english", mode="time", mode2="15"):
     return {"wpm": wpm, "acc": 97.5, "language": language, "mode": mode, "mode2": mode2}
 

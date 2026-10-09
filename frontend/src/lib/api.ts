@@ -12,12 +12,21 @@ function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+/** A non-2xx answer from the backend; `status` lets callers react to specific codes. */
+export class HttpError extends Error {
+    constructor(
+        readonly status: number,
+        statusText = "",
+    ) {
+        super(`HTTP ${status}${statusText ? ` ${statusText}` : ""}`);
+        this.name = "HttpError";
+    }
+}
+
 async function requestJson(path: string, init?: RequestInit): Promise<unknown> {
     const response = await fetch(backendUrl(path), init);
     if (!response.ok) {
-        throw new Error(
-            `HTTP ${response.status}${response.statusText ? ` ${response.statusText}` : ""}`,
-        );
+        throw new HttpError(response.status, response.statusText);
     }
     return response.json();
 }
@@ -50,12 +59,20 @@ export async function getMonkeytypeData(): Promise<TypingScore | null> {
 }
 
 // ---------------------------------------------------------------------------
-// Last.fm
+// Now playing (Spotify, or Last.fm as the fallback)
 // ---------------------------------------------------------------------------
 
 export function parseRecentTrack(data: unknown): RecentTrack | null {
     if (!isRecord(data)) return null;
-    const { songname, artist, image, currentlylistening, url } = data;
+    const {
+        songname,
+        artist,
+        image,
+        currentlylistening,
+        url,
+        played_at,
+        source,
+    } = data;
     if (typeof songname !== "string" || typeof artist !== "string") return null;
     return {
         songname,
@@ -67,7 +84,23 @@ export function parseRecentTrack(data: unknown): RecentTrack | null {
                 ? currentlylistening
                 : false,
         ...(typeof url === "string" && url ? { url } : {}),
+        ...(typeof played_at === "string" && played_at
+            ? { playedAt: played_at }
+            : {}),
+        ...(source === "spotify" || source === "lastfm" ? { source } : {}),
     };
+}
+
+/**
+ * Where the song should link: the track itself when the data came from
+ * Spotify, otherwise a Spotify search for it (Last.fm only knows the names).
+ */
+export function songLink(
+    track: Pick<RecentTrack, "songname" | "artist" | "url" | "source">,
+): string {
+    if (track.source === "spotify" && track.url) return track.url;
+    const query = `${track.songname} ${track.artist}`.trim();
+    return `https://open.spotify.com/search/${encodeURIComponent(query)}`;
 }
 
 /** True when the track is playing right now (accepts the legacy `"True"` string). */
@@ -81,11 +114,19 @@ export function isNowPlaying(
     );
 }
 
-/** Client-side fetch of the most recent track. Throws on failure so the caller can decide what to show. */
+/** Client-side fetch of the current / most recent track. Throws on failure so the caller can decide what to show. */
 export async function fetchRecentTrack(
     signal?: AbortSignal,
 ): Promise<RecentTrack> {
-    const data = await requestJson("/lastfm", { signal, cache: "no-store" });
+    const init: RequestInit = { signal, cache: "no-store" };
+    let data: unknown;
+    try {
+        data = await requestJson("/nowplaying", init);
+    } catch (error) {
+        // Backends deployed before /nowplaying existed only have /lastfm.
+        if (!(error instanceof HttpError && error.status === 404)) throw error;
+        data = await requestJson("/lastfm", init);
+    }
     const parsed = parseRecentTrack(data);
     if (!parsed) throw new Error("unexpected response shape");
     return parsed;

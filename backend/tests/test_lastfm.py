@@ -17,8 +17,17 @@ class CreateLastfmJsonTests(unittest.TestCase):
                 "artist": "Daft Punk",
                 "image": "https://lastfm.freetls.fastly.net/i/u/300x300/cover.jpg",
                 "url": "https://www.last.fm/music/Daft+Punk/_/Harder,+Better,+Faster,+Stronger",
+                "played_at": "2023-11-14T22:13:20Z",
+                "source": "lastfm",
             },
         )
+
+    def test_played_at_is_none_while_playing_or_without_a_date(self):
+        data = lastfm.create_lastfm_json(lastfm_response([lastfm_track(now_playing=True)]))
+        self.assertIsNone(data["played_at"])
+        track = lastfm_track()
+        track["date"] = {"uts": "not-a-number"}
+        self.assertIsNone(lastfm.create_lastfm_json(lastfm_response([track]))["played_at"])
 
     def test_now_playing_is_a_real_boolean(self):
         tracks = [lastfm_track(now_playing=True), lastfm_track(name="older")]

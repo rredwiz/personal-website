@@ -7,6 +7,7 @@ import {
     parseGithubEvents,
     parseRecentTrack,
     parseTypingScore,
+    songLink,
 } from "@/lib/api";
 
 function jsonResponse(
@@ -104,17 +105,32 @@ describe("parseRecentTrack / isNowPlaying", () => {
                 songname: "Song",
                 artist: "Artist",
                 image: "https://img.example/a.jpg",
-                currentlylistening: true,
-                url: "https://last.fm/x",
+                currentlylistening: false,
+                url: "https://open.spotify.com/track/abc",
+                played_at: "2026-10-08T21:15:04.512Z",
+                source: "spotify",
                 extra: "ignored",
             }),
         ).toEqual({
             songname: "Song",
             artist: "Artist",
             image: "https://img.example/a.jpg",
-            currentlylistening: true,
-            url: "https://last.fm/x",
+            currentlylistening: false,
+            url: "https://open.spotify.com/track/abc",
+            playedAt: "2026-10-08T21:15:04.512Z",
+            source: "spotify",
         });
+    });
+
+    it("ignores unknown sources and empty timestamps", () => {
+        const track = parseRecentTrack({
+            songname: "S",
+            artist: "A",
+            played_at: "",
+            source: "tidal",
+        });
+        expect(track).not.toHaveProperty("playedAt");
+        expect(track).not.toHaveProperty("source");
     });
 
     it("tolerates missing image and legacy string booleans", () => {
@@ -150,6 +166,35 @@ describe("parseRecentTrack / isNowPlaying", () => {
     });
 });
 
+describe("songLink", () => {
+    it("links straight to the track when Spotify supplied it", () => {
+        expect(
+            songLink({
+                songname: "S",
+                artist: "A",
+                source: "spotify",
+                url: "https://open.spotify.com/track/abc",
+            }),
+        ).toBe("https://open.spotify.com/track/abc");
+    });
+
+    it("falls back to a Spotify search for Last.fm data and older backends", () => {
+        const expected =
+            "https://open.spotify.com/search/Eyes%20Wide%20Shut%20Fineart";
+        expect(
+            songLink({
+                songname: "Eyes Wide Shut",
+                artist: "Fineart",
+                source: "lastfm",
+                url: "https://www.last.fm/music/Fineart/_/Eyes+Wide+Shut",
+            }),
+        ).toBe(expected);
+        expect(
+            songLink({ songname: "Eyes Wide Shut", artist: "Fineart" }),
+        ).toBe(expected);
+    });
+});
+
 describe("fetchRecentTrack", () => {
     afterEach(() => {
         vi.unstubAllGlobals();
@@ -172,11 +217,36 @@ describe("fetchRecentTrack", () => {
         ).resolves.toMatchObject({ songname: "S" });
 
         const [url, init] = fetchMock.mock.calls[0];
-        expect(url).toMatch(/\/lastfm$/);
+        expect(url).toMatch(/\/nowplaying$/);
         expect(init).toMatchObject({
             signal: controller.signal,
             cache: "no-store",
         });
+    });
+
+    it("falls back to /lastfm when the backend predates /nowplaying", async () => {
+        const fetchMock = vi
+            .fn()
+            .mockResolvedValueOnce(jsonResponse({}, { ok: false, status: 404 }))
+            .mockResolvedValueOnce(
+                jsonResponse({ songname: "S", artist: "A" }),
+            );
+        vi.stubGlobal("fetch", fetchMock);
+
+        await expect(fetchRecentTrack()).resolves.toMatchObject({
+            songname: "S",
+        });
+        expect(fetchMock.mock.calls[1][0]).toMatch(/\/lastfm$/);
+    });
+
+    it("does not mask real outages with the fallback", async () => {
+        const fetchMock = vi
+            .fn()
+            .mockResolvedValue(jsonResponse({}, { ok: false, status: 502 }));
+        vi.stubGlobal("fetch", fetchMock);
+
+        await expect(fetchRecentTrack()).rejects.toThrow(/HTTP 502/);
+        expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     it("throws on HTTP errors and malformed payloads", async () => {

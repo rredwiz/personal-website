@@ -15,7 +15,7 @@ from flask import Flask, Response, jsonify, request
 
 load_dotenv()
 
-from src.apis import github, lastfm, monkeytype  # noqa: E402  (env must be loaded first)
+from src.apis import github, lastfm, monkeytype, nowplaying  # noqa: E402  (env must be loaded first)
 
 logging.basicConfig(
     level=os.environ.get("LOG_LEVEL", "INFO").upper(),
@@ -74,11 +74,10 @@ def create_app(cors_origins: Optional[str] = None) -> Flask:
     # Loaders are looked up at request time (not bound here) so they stay easy to patch in tests.
     register("/monkeytype", "monkeytype", lambda: monkeytype.get_monkeytype_scores_info())
     register("/github", "github", lambda: github.get_github_events())
+    # The music card: Spotify when configured, Last.fm otherwise (see apis/nowplaying.py).
+    register("/nowplaying", "nowplaying", lambda: nowplaying.get_now_playing())
+    # Kept so frontends deployed before /nowplaying existed keep working.
     register("/lastfm", "lastfm", lambda: lastfm.get_recent())
-
-    # Spotify is intentionally kept in the tree but not routed, so production
-    # behaviour does not change until the integration is ready:
-    # register("/spotify", "spotify", lambda: spotify.get_spotify_iframe())
 
     @app.errorhandler(404)
     def not_found(_error: Exception) -> tuple[Response, int]:
