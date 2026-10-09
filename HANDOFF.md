@@ -6,7 +6,7 @@ _Written 2026-10-09 by the agent that did the audit; updated the same day by the
 
 | Area | State |
 | --- | --- |
-| Branch | `fix/audit`, 7 commits on top of `master` (`94678a5`). **Not pushed**, and Andrew asked that nothing go to `master` yet. |
+| Branch | `fix/audit`, 9 commits on top of `master` (`94678a5`). **Not pushed**, and Andrew asked that nothing go to `master` yet. |
 | Backend (`backend/`) | **Verified.** `ruff check .`, `ruff format --check .` and 56 pytest tests pass (Python 3.14 locally; CI uses 3.13). The second session fixed one `ruff` failure (missing newline in `src/apis/__init__.py`) that would have failed CI. |
 | Frontend (`frontend/`) | **Verified.** Clean `npm ci` (npm 10.9.8, as in CI) → `lint` (0 problems, 37 files, React Compiler rules active) → `typecheck` (also with no `.next/`, as in CI) → `test` (61 tests) → `build` all pass on Next 16.4.0. |
 | Visual parity | **Verified in a browser** against a `master` build: home and projects at 1024×768 and 390×844 match element-for-element (bounding boxes, font sizes, colours). Only differences: the intended nav underline (makes the nav pill 1 px taller), the `/projects` tab title, and the fixed body-overflow bug (`master` leaves inline `overflow: auto` on `<body>` after one navigation). No console errors. |
@@ -19,6 +19,8 @@ _Written 2026-10-09 by the agent that did the audit; updated the same day by the
 - **vitest 3.2 → 4.1.11, @vitejs/plugin-react 4 → 5.2**: vitest 3 pulls in `tinypool <2.1.2` (critical) and `@vitest/mocker <4.1.11`. No test changes were needed. `vitest.config.ts` → `.mts` (Vite 8 warns about ESM in a CJS-loaded config); `tsconfig.json` includes `**/*.mts`.
 - `npm audit fix` for transitive `tar`, `fflate`, `postcss`, `sharp`. **Remaining:** `braces <=3.0.3` via `eslint-config-next → fast-glob` (lint-time only; npm's only "fix" is downgrading to eslint-config-next 14). **ESLint stays on 9**: `eslint-plugin-react` (bundled by eslint-config-next) doesn't support ESLint 10 yet.
 - **Prettier run** in its own commit (house style = `master`'s: 4-space, 80 columns). JSON stays 2-space; `tsconfig.json`/`next-env.d.ts` are left to Next.js.
+- **Hydration fix for reduced-motion visitors:** `MonkeyTypeStatsCard` rendered `reducedMotion ? target : animated` on the first render. The server can't know the visitor's preference, so anyone with *prefers-reduced-motion* got "Hydration failed because the server rendered text didn't match the client" (reproduced in Chrome with the preference emulated). The first render is now always 0 and the count-up runs after mount (one step for reduced motion). A `renderToString` test compares the markup under both preferences and fails on the old code.
+- **`next-env.d.ts` is no longer tracked:** Next 16 writes it differently for `next dev` (`.next/dev/types/...`) and `next build` (`.next/types/...`), so it flipped in every working tree. It's gitignored, as create-next-app does, and `npm run typecheck` is now `next typegen && tsc --noEmit`, which regenerates it plus the route types (including Next's route validator). Tested from a clean checkout.
 - **npm gotcha:** npm 10.9.8 crashes (`Cannot read properties of null (reading 'edgesOut')` in Arborist `#loadPeerSet`) when *adding or upgrading* vitest 4 in this tree. If that happens, run the install with `npx npm@11 install ...`; the resulting lockfile (v3) works with npm 10's `npm ci`, which was verified.
 
 ## How to run the checks
