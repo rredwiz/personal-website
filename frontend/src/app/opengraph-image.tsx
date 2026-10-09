@@ -40,8 +40,8 @@ async function loadGoogleFont(
 export default async function OpengraphImage() {
     const [avatar, display, body] = await Promise.all([
         readFile(join(process.cwd(), "public/pixierou.png")),
-        loadGoogleFont("Bricolage Grotesque", 700, HEADLINE),
-        loadGoogleFont("Geist", 400, ROLE + FOOTER),
+        loadGoogleFont("JetBrains Mono", 700, HEADLINE),
+        loadGoogleFont("JetBrains Mono", 400, ROLE + FOOTER),
     ]);
     const avatarSrc = `data:image/png;base64,${avatar.toString("base64")}`;
     // Fonts are subset to their own text, so use both or neither: a lone
@@ -49,8 +49,8 @@ export default async function OpengraphImage() {
     const fonts =
         display && body
             ? [
-                  { name: "Bricolage", data: display, weight: 700 as const },
-                  { name: "Geist", data: body, weight: 400 as const },
+                  { name: "Display", data: display, weight: 700 as const },
+                  { name: "Body", data: body, weight: 400 as const },
               ]
             : undefined;
 
@@ -73,14 +73,18 @@ export default async function OpengraphImage() {
                 <div
                     style={{
                         display: "flex",
-                        fontSize: 92,
+                        fontSize: 76,
                         fontWeight: 700,
-                        letterSpacing: "-0.02em",
-                        fontFamily: fonts ? "Bricolage" : undefined,
+                        letterSpacing: "-0.01em",
+                        fontFamily: fonts ? "Display" : undefined,
                     }}
                 >
-                    Hey, I&apos;m&nbsp;
-                    <span style={{ color: "#ffffff" }}>Andrew</span>.
+                    Hey, I&apos;m
+                    {/* one monospace space: JetBrains Mono advances are 0.6em */}
+                    <span style={{ color: "#ffffff", marginLeft: "0.6em" }}>
+                        Andrew
+                    </span>
+                    .
                 </div>
                 <div
                     style={{
@@ -88,7 +92,7 @@ export default async function OpengraphImage() {
                         marginTop: 14,
                         fontSize: 42,
                         color: "#9ea4ab",
-                        fontFamily: fonts ? "Geist" : undefined,
+                        fontFamily: fonts ? "Body" : undefined,
                     }}
                 >
                     {ROLE}
@@ -99,7 +103,7 @@ export default async function OpengraphImage() {
                         marginTop: 44,
                         fontSize: 28,
                         color: "#80878f",
-                        fontFamily: fonts ? "Geist" : undefined,
+                        fontFamily: fonts ? "Body" : undefined,
                     }}
                 >
                     {FOOTER}

@@ -25,27 +25,35 @@ describe("Nav", () => {
         expect(screen.getByRole("navigation", { name: "Primary" })).toHaveClass(
             "nav-class",
         );
-        expect(screen.getByRole("link", { name: "Projects" })).toHaveAttribute(
+        expect(screen.getByRole("link", { name: "projects" })).toHaveAttribute(
             "aria-current",
             "page",
         );
-        expect(screen.getByRole("link", { name: "Home" })).not.toHaveAttribute(
+        expect(screen.getByRole("link", { name: "home" })).not.toHaveAttribute(
             "aria-current",
         );
+    });
+
+    it("shows Vim tab labels while naming links plainly", () => {
+        usePathname.mockReturnValue("/");
+        render(<Nav />);
+        const home = screen.getByRole("link", { name: "home" });
+        // Visible "1 home.md": the number and extension are decoration.
+        expect(home).toHaveTextContent("1home.md");
     });
 
     it("marks home on the root path", () => {
         usePathname.mockReturnValue("/");
         render(<Nav />);
-        expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute(
+        expect(screen.getByRole("link", { name: "home" })).toHaveAttribute(
             "aria-current",
             "page",
         );
-        expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute(
+        expect(screen.getByRole("link", { name: "home" })).toHaveAttribute(
             "href",
             "/",
         );
-        expect(screen.getByRole("link", { name: "Projects" })).toHaveAttribute(
+        expect(screen.getByRole("link", { name: "projects" })).toHaveAttribute(
             "href",
             "/projects",
         );

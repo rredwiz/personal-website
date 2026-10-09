@@ -4,6 +4,7 @@ import RecentlyListenedCard from "@/components/RecentlyListenedCard";
 import MonkeyTypeStatsCard from "@/components/MonkeyTypeStatsCard";
 import { Card, CardFileBar } from "@/components/ui/Card";
 import ExternalLink from "@/components/ui/ExternalLink";
+import { Buffer, Cursor } from "@/components/vim/Buffer";
 import {
     BookOpenIcon,
     FileTextIcon,
@@ -12,6 +13,7 @@ import {
     MapPinIcon,
 } from "@/components/icons";
 import { getMonkeytypeData } from "@/lib/api";
+import { cx } from "@/lib/cx";
 
 const SOCIAL_LINKS: ReadonlyArray<{
     href: string;
@@ -52,10 +54,14 @@ function ProfileCard() {
                 </ul>
             </div>
             <div>
-                <h1 className="font-display text-[1.75rem] leading-[1.1] font-semibold tracking-tight">
+                <h1 className="font-display text-2xl leading-[1.2] font-bold tracking-tight">
                     <span className="text-ink-soft">Hey, I&apos;m</span>{" "}
-                    <span className="text-white">Andrew</span>
-                    <span className="text-ink-soft">.</span>
+                    {/* nowrap keeps the cursor on the name's line */}
+                    <span className="whitespace-nowrap">
+                        <span className="text-white">Andrew</span>
+                        <span className="text-ink-soft">.</span>
+                        <Cursor />
+                    </span>
                 </h1>
                 <p className="mt-1.5 text-ink-muted">
                     CS Student &amp; Developer
@@ -74,9 +80,12 @@ function AboutCard({ className }: { className?: string }) {
         <Card
             as="section"
             aria-labelledby="about-heading"
-            className={className}
+            className={cx("flex flex-col", className)}
         >
-            <CardFileBar icon={<BookOpenIcon className="size-3.5" />}>
+            <CardFileBar
+                icon={<BookOpenIcon className="size-3.5" />}
+                meta="markdown"
+            >
                 <ExternalLink
                     href="https://github.com/rredwiz"
                     className="transition-colors hover:text-ink"
@@ -85,30 +94,36 @@ function AboutCard({ className }: { className?: string }) {
                     <span className="text-ink-soft">README</span>.md
                 </ExternalLink>
             </CardFileBar>
-            <h2
-                id="about-heading"
-                className="font-display text-2xl font-semibold tracking-tight"
-            >
-                <span
-                    aria-hidden="true"
-                    className="mr-2 font-mono text-xl font-normal text-ink-faint"
-                >
-                    #
-                </span>
-                About Me
-            </h2>
-            <p className="mt-3 leading-relaxed text-ink-soft">
-                I&apos;m a currently-enrolled rising junior Computer Science
-                student and software developer. At the moment, I&apos;m
-                interning at{" "}
-                <ExternalLink
-                    inline
-                    href="https://www.purolator.com/en/digitallab"
-                >
-                    Purolator Digital Lab
-                </ExternalLink>{" "}
-                and hobby building full-stack projects in my free time.
-            </p>
+            <Buffer
+                lines={[
+                    <h2
+                        key="heading"
+                        id="about-heading"
+                        className="font-display text-xl font-bold tracking-tight"
+                    >
+                        <span aria-hidden="true" className="text-ink-faint">
+                            #{" "}
+                        </span>
+                        About Me
+                    </h2>,
+                    null,
+                    <p
+                        key="body"
+                        className="text-[0.95rem] leading-relaxed text-ink-soft"
+                    >
+                        I&apos;m a currently-enrolled rising junior Computer
+                        Science student and software developer. At the moment,
+                        I&apos;m interning at{" "}
+                        <ExternalLink
+                            inline
+                            href="https://www.purolator.com/en/digitallab"
+                        >
+                            Purolator Digital Lab
+                        </ExternalLink>{" "}
+                        and hobby building full-stack projects in my free time.
+                    </p>,
+                ]}
+            />
         </Card>
     );
 }

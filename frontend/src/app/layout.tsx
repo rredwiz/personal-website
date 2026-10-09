@@ -1,32 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Background from "@/components/background/Background";
 import { BASE_COLOR } from "@/lib/theme";
 import { cx } from "@/lib/cx";
-import WarningElement from "@/components/WarningElement";
+import StatusLine from "@/components/vim/StatusLine";
 import Nav from "@/components/navigation/Nav";
 import LayoutTransition from "@/components/animations/LayoutTransition";
 
-const geist = Geist({
+// One smooth monospace face for everything: it's an editor font, and the site is
+// dressed as an editor.
+const jetbrainsMono = JetBrains_Mono({
     subsets: ["latin"],
-    variable: "--font-geist",
+    variable: "--font-jetbrains",
     display: "swap",
-});
-
-const geistMono = Geist_Mono({
-    subsets: ["latin"],
-    variable: "--font-geist-mono",
-    display: "swap",
-});
-
-// Display face for names and headings; the opsz axis tightens it at large sizes.
-const bricolage = Bricolage_Grotesque({
-    subsets: ["latin"],
-    variable: "--font-bricolage",
-    display: "swap",
-    axes: ["opsz"],
 });
 
 const SITE_URL = "https://andster.dev";
@@ -63,9 +51,7 @@ export default function RootLayout({
         <html
             lang="en"
             className={cx(
-                geist.variable,
-                geistMono.variable,
-                bricolage.variable,
+                jetbrainsMono.variable,
                 "bg-canvas font-sans text-ink antialiased",
             )}
         >
@@ -77,12 +63,13 @@ export default function RootLayout({
                     Skip to content
                 </a>
                 <Background />
-                <header className="pointer-events-none sticky top-0 z-20 flex justify-center px-4 pt-4 sm:pt-5">
-                    <Nav className="pointer-events-auto" />
+                {/* The page is dressed as a Vim session: tabline, buffers, statusline. */}
+                <header className="sticky top-0 z-20">
+                    <Nav />
                 </header>
                 <LayoutTransition>{children}</LayoutTransition>
-                <footer className="flex justify-center px-4 pt-2 pb-6">
-                    <WarningElement />
+                <footer className="relative z-20 md:sticky md:bottom-0">
+                    <StatusLine />
                 </footer>
                 <Analytics />
             </body>

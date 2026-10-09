@@ -2,6 +2,7 @@ import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import { Card, CardFileBar } from "@/components/ui/Card";
 import { FileTextIcon, HomeIcon } from "@/components/icons";
+import MissingFile from "@/components/vim/MissingFile";
 
 export default function NotFound() {
     return (
@@ -21,7 +22,9 @@ export default function NotFound() {
                         </span>
                     </CardFileBar>
                     <Avatar scale={5} preload className="mx-auto mt-2" />
-                    <p className="mt-5 font-mono text-sm text-accent">404</p>
+                    <div className="mt-5">
+                        <MissingFile />
+                    </div>
                     <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight">
                         Nothing here.
                     </h1>

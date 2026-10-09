@@ -3,6 +3,7 @@ import Avatar from "@/components/Avatar";
 import ProjectCard from "@/components/ProjectCard";
 import { Card, CardFileBar } from "@/components/ui/Card";
 import ExternalLink from "@/components/ui/ExternalLink";
+import { Buffer } from "@/components/vim/Buffer";
 import { BookOpenIcon } from "@/components/icons";
 // GitHub activity feed: backend route + component are ready, just not shown yet.
 // import GithubEvents from "@/components/GithubEvents";
@@ -44,7 +45,10 @@ export default function ProjectsPage() {
         >
             <div className="rise-in grid w-full max-w-4xl gap-4 md:grid-cols-3">
                 <Card as="section" className="md:col-span-3">
-                    <CardFileBar icon={<BookOpenIcon className="size-3.5" />}>
+                    <CardFileBar
+                        icon={<BookOpenIcon className="size-3.5" />}
+                        meta="markdown"
+                    >
                         <ExternalLink
                             href="https://github.com/rredwiz"
                             className="transition-colors hover:text-ink"
@@ -54,25 +58,41 @@ export default function ProjectsPage() {
                         </ExternalLink>
                     </CardFileBar>
                     <div className="flex items-center gap-4 sm:gap-6">
-                        <Avatar scale={4} preload />
-                        <div className="min-w-0">
-                            <h1 className="font-display text-2xl leading-tight font-semibold tracking-tight sm:text-3xl">
-                                Personal projects{" "}
-                                <span className="text-ink-muted">
-                                    and things I&apos;ve built
-                                </span>
-                            </h1>
-                            <p className="mt-2 text-ink-muted">
-                                They can each be found on my own github{" "}
-                                <ExternalLink
-                                    inline
-                                    href="https://github.com/rredwiz"
+                        <Buffer
+                            lines={[
+                                <h1
+                                    key="heading"
+                                    className="font-display text-xl leading-snug font-bold tracking-tight sm:text-2xl"
                                 >
-                                    here
-                                </ExternalLink>
-                                —more to come in the future.
-                            </p>
-                        </div>
+                                    <span
+                                        aria-hidden="true"
+                                        className="text-ink-faint"
+                                    >
+                                        #{" "}
+                                    </span>
+                                    Personal projects{" "}
+                                    <span className="text-ink-muted">
+                                        and things I&apos;ve built
+                                    </span>
+                                </h1>,
+                                null,
+                                <p key="body" className="text-ink-muted">
+                                    They can each be found on my own github{" "}
+                                    <ExternalLink
+                                        inline
+                                        href="https://github.com/rredwiz"
+                                    >
+                                        here
+                                    </ExternalLink>
+                                    —more to come in the future.
+                                </p>,
+                            ]}
+                        />
+                        <Avatar
+                            scale={4}
+                            preload
+                            className="hidden self-start sm:block"
+                        />
                     </div>
                 </Card>
                 {/* <GithubEvents events={githubEvents.events} /> */}

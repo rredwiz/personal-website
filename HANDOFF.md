@@ -11,6 +11,7 @@ _Written 2026-10-09 by the agent that did the audit; updated the same day by the
 | Frontend (`frontend/`) | **Verified.** Clean `npm ci` (npm 10.9.8, as in CI) → `lint` (0 problems, 37 files, React Compiler rules active) → `typecheck` (also with no `.next/`, as in CI) → `test` (61 tests) → `build` all pass on Next 16.4.0. |
 | Visual parity | **Verified in a browser** against a `master` build: home and projects at 1024×768 and 390×844 match element-for-element (bounding boxes, font sizes, colours). Only differences: the intended nav underline (makes the nav pill 1 px taller), the `/projects` tab title, and the fixed body-overflow bug (`master` leaves inline `overflow: auto` on `<body>` after one navigation). No console errors. |
 | Design pass | **Done, awaiting Andrew's review** on `design/visual-refresh` (rebased onto the latest `fix/audit`). See "Design pass" at the bottom. |
+| Vim theme | `design/vim`, built on `design/visual-refresh` at Andrew's request ("Vim themed", smoother font). Awaiting his review; see "Vim theme" at the bottom. |
 
 ## What the second session changed
 
@@ -149,3 +150,16 @@ Same routes, copy, widgets and data as `fix/audit`; new presentation. lint, type
 **Open / ideas not done**
 - GitHub activity feed stays unrendered until the backend issue above is fixed (otherwise it would always be empty).
 - Possible follow-ups: project screenshots for all three cards, a "currently working on" line, a light theme, a cursor spotlight on cards.
+
+## Vim theme (branch `design/vim`)
+
+Andrew liked the monochrome refresh and asked for a Vim-themed iteration with a smoother font. Same content, data and widgets; all checks pass (117 frontend tests).
+
+- **Font:** JetBrains Mono for everything (headings, text, labels, numbers), via `next/font`. Chosen from a side-by-side render of nine options (Bricolage, Geist Mono, IBM Plex Mono, DM Mono, Fira Code, Red Hat Mono, Spline Sans Mono, Martian Mono, Recursive): it was the smoothest, it's an editor font, and it stays readable at paragraph size. The three font roles in `globals.css` still exist, so headings can diverge later.
+- **Tabline** (`navigation/Nav.tsx`): `1 home.md  2 projects.md`, the active tab in reverse video sliding between tabs. Visible numbers and extensions are `aria-hidden`, so the links are still named "home" and "projects".
+- **Statusline + command line** (`vim/StatusLine.tsx`, docked at the bottom, sticky from `md` up): mode (`NORMAL`/`COMMAND`), buffer (`~/home.md`, or `~/nope [New]` on a 404), filetype, a `keys:on/off` toggle, and Vim's ruler (`All`/`Top`/`Bot`/`42%`). The command line's resting message is "This site owner is extremely cool." (the old footer pill).
+- **Keys:** `j`/`k` scroll, `gg`/`G` top/bottom, `gt`/`gT` cycle tabs, `:` opens the command line, `?` help, `Esc` closes. Commands (`vim/commands.ts`, pure and tested): `:home`, `:projects`, `:e`/`:tabe <file>`, `:tabn`/`:tabp`/`:tabfirst`/`:tablast`, `:github`, `:linkedin`, `:resume`, `:monkeytype`, `:help`, `:set nokeys`/`:set keys`, plus Vim-flavoured errors (`:q` gets E37, unknown commands get E492, `:e nope` gets E484). Keys are ignored in text fields and with Cmd/Ctrl/Alt, so browser and screen-reader shortcuts are untouched. They can be switched off from the statusline or the help panel (remembered in localStorage), which is what WCAG 2.1.4 asks of single-character shortcuts. The `:` and `?` chips make both reachable by mouse and touch.
+- **Buffers** (`vim/Buffer.tsx`): the README cards render as `:set number wrap` buffers (line-number gutter, `#` heading markers) with `~` filler that only appears in spare space. Never makes a card taller.
+- **Details:** blinking block cursor after "Andrew." (steady with reduced motion), window bars show the filetype and light up on hover like Vim's active window, cards use a tighter radius, the 404 says `E484: Can't open file ~/<path>`, and the OG image uses JetBrains Mono.
+- **Verified** with real key events in Chrome (17 scripted checks: help, every command path, tab cycling, j/G/gg with the ruler, the keys toggle and its persistence), at 1280×800 and 390×844, with reduced motion (no hydration errors) and on the 404.
+

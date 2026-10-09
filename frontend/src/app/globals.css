@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 /*
- * Font families come from next/font (see layout.tsx), which defines the
- * --font-geist / --font-geist-mono / --font-bricolage variables on <html>.
+ * The font comes from next/font (see layout.tsx), which defines the
+ * --font-jetbrains variable on <html>.
  * `inline` makes the utilities reference those variables directly.
  */
 @theme inline {
+    /* All three roles share JetBrains Mono; kept separate so they can diverge. */
     --font-sans:
-        var(--font-geist), ui-sans-serif, system-ui, -apple-system, sans-serif;
+        var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
     --font-mono:
-        var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+        var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
     --font-display:
-        var(--font-bricolage), var(--font-geist), ui-sans-serif, system-ui,
-        sans-serif;
+        var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 @theme {
@@ -50,6 +50,19 @@
         }
         50% {
             transform: scaleY(1);
+        }
+    }
+
+    --animate-blink: blink 1.1s steps(1, end) infinite;
+
+    @keyframes blink {
+        0%,
+        55% {
+            opacity: 1;
+        }
+        56%,
+        100% {
+            opacity: 0;
         }
     }
 
