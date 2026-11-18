@@ -1,0 +1,46 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "before (fix/audit)",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd /private/tmp/claude-502/-Users-andrewdutka--stuff-projects-personal-website/1f8a817d-334f-41a5-a96e-3d55f9042e8c/scratchpad/before-src/frontend && exec ./node_modules/.bin/next start --port 4001"
+      ],
+      "port": 4001
+    },
+    {
+      "name": "after (design/visual-refresh)",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd /private/tmp/claude-502/-Users-andrewdutka--stuff-projects-personal-website/1f8a817d-334f-41a5-a96e-3d55f9042e8c/scratchpad/refresh-src/frontend && exec ./node_modules/.bin/next start --port 4000"
+      ],
+      "port": 4000
+    },
+    {
+      "name": "vim (design/vim)",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd /private/tmp/claude-502/-Users-andrewdutka--stuff-projects-personal-website/1f8a817d-334f-41a5-a96e-3d55f9042e8c/scratchpad/vim-src/frontend && exec ./node_modules/.bin/next start --port 4002"
+      ],
+      "port": 4002
+    },
+    {
+      "name": "live dev server (working tree)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "frontend",
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "4003"
+      ],
+      "port": 4003
+    }
+  ]
+}
